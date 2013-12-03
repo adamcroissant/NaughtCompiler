@@ -97,44 +97,44 @@ extern AST_node *AST;
 
 module :
          funcdecl_list vardecl_list funcdef_list
-          { AST = new StrUtil(*$1 + *$2 + *$3);
+          { AST = new module_node($2, $3, $1);
             $$ = AST;
-            cout << *$$ << " -> module " << endl;
+//            cout << *$$ << " -> module " << endl;
           }
         |              vardecl_list funcdef_list
-          { AST = new StrUtil(*$1 + *$2);
+          { AST = new module_node($1, $2, nullptr);
             $$ = AST;
-            cout << *$$ << " -> module " << endl;
+//            cout << *$$ << " -> module " << endl;
           }
         | funcdecl_list             funcdef_list
-          { AST = new StrUtil(*$1 + *$2);
+          { AST = new module_node(nullptr, $2, $1);
             $$ = AST;
-            cout << *$$ << " -> module " << endl;
+//            cout << *$$ << " -> module " << endl;
           }
         |                            funcdef_list
-          { AST = new StrUtil(*$1);
+          { AST = new module_node(nullptr, $1, nullptr);
             $$ = AST;
-            cout << *$$ << " -> module " << endl;
+//            cout << *$$ << " -> module " << endl;
           }
         | funcdecl_list vardecl_list
-          { AST = new StrUtil(*$1 + *$2);
+          { AST = new module_node($2, nullptr, $1);
             $$ = AST;
-            cout << *$$ << " -> module " << endl;
+//            cout << *$$ << " -> module " << endl;
           }
         |              vardecl_list
-          { AST = new StrUtil(*$1);
+          { AST = new module_node($1, nullptr, nullptr);
             $$ = AST;
-            cout << *$$ << " -> module " << endl;
+//            cout << *$$ << " -> module " << endl;
           }
         | funcdecl_list             
-          { AST = new StrUtil(*$1);
+          { AST = new module_node(nullptr, nullptr, $1);
             $$ = AST;
-            cout << *$$ << " -> module " << endl;
+//            cout << *$$ << " -> module " << endl;
           }
         |
-          { AST = new StrUtil(string());
+          { AST = new module_node(nullptr, nullptr, nullptr);
             $$ = AST;
-            cout << *$$ << " -> module " << endl;
+//            cout << *$$ << " -> module " << endl;
           }
         ;
 
