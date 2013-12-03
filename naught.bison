@@ -240,69 +240,57 @@ param :
 
 block : 
 	  LCBRACE vardecl_list stmt_list RCBRACE
-          { $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
-            cout << *$$ << " -> block " << endl;
+          { $$ = new block_node($2, $3);
           }
 	| LCBRACE              stmt_list RCBRACE
-          { $$ = new StrUtil(*$1 + *$2 + *$3);
-            cout << *$$ << " -> block " << endl;
+          { $$ = new block_node(nullptr, $3);
           }
 	| LCBRACE vardecl_list           RCBRACE
-          { $$ = new StrUtil(*$1 + *$2 + *$3);
-            cout << *$$ << " -> block " << endl;
+          { $$ = new block_node($2, nullptr);
           }
         | LCBRACE RCBRACE
-          { $$ = new StrUtil(*$1 + *$2);
-            cout << *$$ << " -> block " << endl;
+          { $$ = new block_node($2, $3);
           }
         ;
 
 stmt_list :
           stmt_list stmt
-          { $$ = new StrUtil(*$1 + *$2);
-            cout << *$$ << " -> stmt_list " << endl;
+          { $1->list.push_back($2);
+	    $$ = $1;
           }
         | stmt
-          { $$ = new StrUtil(*$1);
-            cout << *$$ << " -> stmt_list " << endl;
+          { $$ = new stmtlist_node($1);
           }
        ;
 
 stmt : 
          expr SEMI
-          { $$ = new StrUtil(*$1 + *$2);
-            cout << *$$ << " -> stmt " << endl;
+          { $$ = $1;
           }
        | RETURN expr SEMI
-          { $$ = new StrUtil(*$1 + *$2 + *$3);
-            cout << *$$ << " -> stmt " << endl;
+          { $$ = new return_node($2, nullptr);
           }
      ;
 
 expr : 
         expr ADD expr
-        { $$ = new StrUtil(*$1 + *$2 + *$3);
-          cout << *$$ << " -> expr" << endl;
+        { $$ = new add_node($1, $3);
         }
       | expr SUB expr
-        { $$ = new StrUtil(*$1 + *$2 + *$3);
-          cout << *$$ << " -> expr" << endl;
+        { $$ = new sud_node($1, $3);
         }
       | expr STAR expr
-        { $$ = new StrUtil(*$1 + *$2 + *$3);
-          cout << *$$ << " -> expr" << endl;
+        { $$ = new mult_node($1, $3);
         }
       | expr DIV expr
-        { $$ = new StrUtil(*$1 + *$2 + *$3);
-          cout << *$$ << " -> expr" << endl;
+        { $$ = new div_node($1, $3);
         }
       | term  ASSIGN expr
-        { $$ = new StrUtil(*$1 + *$2 + *$3);
-          cout << *$$ << " -> expr" << endl;
+        { $$ = new assign_node($1, $3);
         }
       | expr QUESTION expr COLON expr
-        { $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
-          cout << *$$ << " -> expr" << endl;
+      // check this constructor's node order
+        { $$ = new ternary_node($1, $3, $5);
         }
       | term
         { $$ = $1;
@@ -311,8 +299,7 @@ expr :
 
 term :
         STRING_LITERAL
-        { $$ = new StrUtil(*$1);
-          cout << *$$ << " -> term" << endl;
+        { $$ = new stringliteral_node(*$1);
         }
       | INT_LITERAL
         { $$ = new IntLiteral_node(*$1);
