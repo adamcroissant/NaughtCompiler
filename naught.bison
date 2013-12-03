@@ -305,24 +305,36 @@ term :
         { $$ = new IntLiteral_node(*$1);
         }
       | ID
-        { $$ = new StrUtil(*$1);
+        { $$ = new variable_node(*$1);
+          /*
+          $$ = new StrUtil(*$1);
           cout << *$$ << " -> term" << endl;
+          */
         }
       | LPAREN expr RPAREN
-       { $$ = new StrUtil( *$1 + *$2 + *$3 );
+       { $$ = $2;
+         /*
+         $$ = new StrUtil( *$1 + *$2 + *$3 );
          cout << *$$ << " -> term" << endl;
+         */
         }
       | UNARY_OP term
         { $$ = new StrUtil( *$1 + *$2);
           cout << *$$ << " -> term" << endl;
         }
       | ID LPAREN arglist RPAREN  /* function call */
-       { $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
+       { $$ = new function_node(*$1, $2);
+         /*
+         $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
          cout << *$$ << " -> term" << endl;
+         */
        }
-      | ID LPAREN RPAREN  /* function call */
-       { $$ = new StrUtil(*$1 + *$2 + *$3);
+      | ID LPAREN RPAREN  /* function call - no params */
+       { $$ = new function_node(*$1, nullptr);
+         /*
+         $$ = new StrUtil(*$1 + *$2 + *$3);
          cout << *$$ << " -> term" << endl;
+         */
        }
       ;
 
