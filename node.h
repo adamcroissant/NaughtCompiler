@@ -188,7 +188,7 @@ enum var_type {
 
 class vardecl_node : public AST_node {
  public:
-  enum var_type t;
+  var_type t;
   bool isExtern = false;
 
 
@@ -216,6 +216,17 @@ class function_node : AST_node {
  function_node(string id, AST_node* param_list) : AST_node() {
     this->id = id;
     parameter_list = param_list;
+  }
+};
+
+class param_node : public AST_node {
+ public:
+  string id;
+  var_type t;
+
+ param_node(var_type t, string id) : AST_node() {
+    this->t = t;
+    this->id = id;
   }
 };
 
