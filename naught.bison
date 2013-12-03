@@ -31,6 +31,28 @@ extern AST_node *AST;
 %union {
   StrUtil*    string_val;
   IntLiteral_node*        int_val;
+  AST_node*               node;
+  variable_node*          var;
+  add_node*               add;
+  sub_node*               sub;
+  div_node*               div;
+  mult_node*              mult;
+  stmtlist_node*          stmtlist;
+  vardecl_list_node*      vardecl_list;
+  funcdef_list_node*      funcdef_list;
+  funcdecl_list_node*     funcdecl_list;
+  arglist_node*           arglist;
+  paramlist_node*         paramlist;
+  funcdef_node*           funcdef;
+  block_node*             block;
+  assign_node*            assign;
+  stringliteral_node*     strlit;
+  module_node*            module;
+  return_node*            return;
+  ternary_node*           ternary;
+  vardecl_node*           vardecl;
+  function_node*          function; 
+  param_node*             param;
 }
 
 /***********************************************************************
@@ -64,22 +86,22 @@ extern AST_node *AST;
  * corresponding to non-terminals.
  **********************************************************/
 
-%type <string_val> module
-%type <string_val> funcdef
-%type <string_val> block
-%type <string_val> vardecl
-%type <string_val> funcdecl
-%type <string_val> expr
-%type <string_val> term
-%type <string_val> stmt
+%type <module> module
+%type <funcdef> funcdef
+%type <block> block
+%type <vardecl> vardecl
+%type <funcdecl> funcdecl
+%type <node> expr
+%type <node> term
+%type <node> stmt
 
-%type <string_val> stmt_list
-%type <string_val> vardecl_list
-%type <string_val> funcdecl_list
-%type <string_val> param;
-%type <string_val> param_list;
-%type <string_val> funcdef_list
-%type <string_val> arglist;
+%type <stmt_list> stmt_list
+%type <vardecl_list> vardecl_list
+%type <funcdecl_list> funcdecl_list
+%type <param> param;
+%type <param_list> param_list;
+%type <funcdef_list> funcdef_list
+%type <arglist> arglist;
 
 /*********************************************
  * This is the terminal symbol.  The entire

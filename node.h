@@ -38,6 +38,18 @@ class add_node : public AST_node {
 
 };
 
+class mult_node : public AST_node {
+
+};
+
+class sub_node : public AST_node {
+
+};
+
+class div_node : public AST_node {
+
+};
+
 class stmtlist_node : public AST_node {
   public:
     stmtlist_node(AST_node* node) : AST_node() {
