@@ -1,3 +1,6 @@
+#ifndef __NODE_H__
+#define __NODE_H__
+
 #include <string>
 #include <vector>
 using namespace std;
@@ -126,3 +129,5 @@ class block_node : public AST_node {
   public:
     block_node(AST_node* vdecl_l, AST_node* stmt_l) : AST_node(vdecl_l, stmt_l) {}
 }
+
+#endif /* NODE_H */
