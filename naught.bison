@@ -222,19 +222,29 @@ funcdef :
 
 param_list : 
           param_list COMMA param
-          { $$ = new StrUtil(*$1 + *$2 + *$3);
+          { $1->list.push_back($3);
+            $$ = $1;
+            /*
+            $$ = new StrUtil(*$1 + *$2 + *$3);
             cout << *$$ << " -> param_list " << endl;
+            */
           }
         | param
-          { $$ = new StrUtil(*$1);
+          { $$ = new paramlist_node($1);
+            /*
+            $$ = new StrUtil(*$1);
             cout << *$$ << " -> param_list " << endl;
+            */
           }
         ;
 
 param :
          TYPE ID
-          { $$ = new StrUtil(*$1 + *$2);
+          { $$ = new param_node(*$1, *$2);
+            /*
+            $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> param " << endl;
+            */
           }
         ;
 
