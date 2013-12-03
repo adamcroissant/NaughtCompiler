@@ -62,7 +62,6 @@ class vardecl_list_node : public AST_node {
         delete list[i];
       }
     }
-
 };
 
 class funcdef_list_node : public AST_node {
@@ -156,7 +155,7 @@ class module_node : public AST_node {
     this->funcdecl_list = funcdecl_list;
   }
 
-  ~() {
+  ~module_node() {
     delete funcdecl_list;
   }
 };
@@ -177,7 +176,7 @@ class ternary_node : AST_node {
     this->question = question;
   }
   
-  ~() {
+  ~ternary_node() {
     delete question;
   }
 };
@@ -207,13 +206,14 @@ class vardecl_node : public AST_node {
   }
 };
 
+// for a function call
 class function_node : AST_node {
  public:
   // initializes left to point to the expression to return                 
-  std::string id;
-  AST_node parameter_list; // may need to change this type
+  string id;
+  AST_node* parameter_list; // may need to change this type
 
- function_node(std::string id, AST_node param_list) : AST_node() {
+ function_node(string id, AST_node* param_list) : AST_node() {
     this->id = id;
     parameter_list = param_list;
   }
