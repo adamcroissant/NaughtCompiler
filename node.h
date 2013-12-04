@@ -225,7 +225,7 @@ class IntLiteral_node : public AST_node {
  IntLiteral_node(int i) : AST_node() {
     literal = i;
   }
-  virtual string generate_code() {
+  virtual string generate_code(ofstream& f) {
     return literal.to_string();
   }
 };
