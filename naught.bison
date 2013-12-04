@@ -193,12 +193,19 @@ funcdecl :
 
 vardecl_list : 
           vardecl_list vardecl SEMI
-          { $$ = new StrUtil(*$1 + *$2 +*$3);
+          { $1->list.push_back($2);
+            $$ = $1;
+            /*
+            $$ = new StrUtil(*$1 + *$2 +*$3);
             cout << *$$ << " -> vardecl_list " << endl;
+            */
           }
         | vardecl SEMI
-          { $$ = new StrUtil(*$1 + *$2);
+          { $$ = new vardecl_list_node($1);
+            /*
+            $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl_list " << endl;
+            */
           }
         ;
 
