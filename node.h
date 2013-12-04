@@ -1,6 +1,7 @@
 #ifndef __NODE_H__
 #define __NODE_H__
 
+#include "nstring.h"
 #include <string>
 #include <vector>
 using namespace std;
