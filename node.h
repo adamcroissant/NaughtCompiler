@@ -103,12 +103,20 @@ class stmtlist_node : public AST_node {
  stmtlist_node(AST_node* node) : AST_node() {
     list.push_back(node);
   }
+  virtual string generate_code(ofstream& f) {
+    for(size_t i=0; i<list.size(); i++) {
+      list[i].generate_code(f);
+    }
+    return "";
+  }
+
   
   ~stmtlist_node() {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
   }
+
 };
 
 class vardecl_list_node : public AST_node {
