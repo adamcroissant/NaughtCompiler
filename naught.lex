@@ -11,6 +11,7 @@
 
  #include "StrUtil.h"
  #include "parser.hh"
+ #include "node.h"
 %}
 
 digit       [0-9]

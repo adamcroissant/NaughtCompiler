@@ -13,10 +13,9 @@
 
 #include "yy.h"
 
-#include "AST_node.h"
-#include "IntLiteral_node.h"
+#include "node.h"
 
-StrUtil *AST = nullptr;
+AST_node *AST = nullptr;
 
 int _WANT_DEBUG = 0;
 
