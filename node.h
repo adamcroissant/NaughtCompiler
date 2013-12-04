@@ -53,7 +53,7 @@ class add_node : public AST_node {
     string temp = "temp_" + to_string(temp_count);
 
     temp_count ++;
-    f << temp << " = " << left->generate_code(f) << " + "
+    f << "int " << temp << " = " << left->generate_code(f) << " + "
       << right->generate_code(f) << ";" << endl;
     return temp;
   }
@@ -68,7 +68,7 @@ class mult_node : public AST_node {
     string temp = "temp_" + to_string(temp_count);
 
     temp_count ++;
-    f << temp << " = " << left->generate_code(f) << " * "
+    f << "int " << temp << " = " << left->generate_code(f) << " * "
       << right->generate_code(f) << ";" << endl;
     return temp;
   }
@@ -81,7 +81,7 @@ class sub_node : public AST_node {
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
     temp_count ++;
-    f << temp << " = " << left->generate_code(f) << " - "
+    f << "int " << temp << " = " << left->generate_code(f) << " - "
       << right->generate_code(f) << ";" << endl;
     return temp;
   }
@@ -94,7 +94,7 @@ class div_node : public AST_node {
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
     temp_count ++;
-    f << temp << " = " << left->generate_code(f) << " / "
+    f << "int " << temp << " = " << left->generate_code(f) << " / "
       << right->generate_code(f) << ";" << endl;
     return temp;
   }
