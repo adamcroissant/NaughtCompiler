@@ -122,6 +122,13 @@ class vardecl_list_node : public AST_node {
       delete list[i];
     }
   }
+
+  virtual string generate_code(ofstream& f) {
+    for (int i = 0; i < list.size(); i ++) {
+      list[i]->generate_code(f);
+    }
+    return "";
+  }
 };
 
 class funcdef_list_node : public AST_node {
@@ -302,6 +309,15 @@ class vardecl_node : public AST_node {
     isExtern = e;
     this->type = type;
     this->id = id;
+  }
+
+  virtual string generate_code(ofstream& f) {
+    if (left == nullptr) {
+      f << type << " " << id << ";" << endl;
+    } else {
+      f << type << " " << id << " = " << left->generate_code(f) << ";" << endl;
+    }
+    return "";
   }
 };
 
