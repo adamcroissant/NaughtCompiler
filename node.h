@@ -103,12 +103,20 @@ class stmtlist_node : public AST_node {
  stmtlist_node(AST_node* node) : AST_node() {
     list.push_back(node);
   }
+  virtual string generate_code(ofstream& f) {
+    for(size_t i=0; i<list.size(); i++) {
+      list[i]->generate_code(f);
+    }
+    return "";
+  }
+
   
   ~stmtlist_node() {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
   }
+
 };
 
 class vardecl_list_node : public AST_node {
@@ -267,6 +275,12 @@ class return_node : public AST_node {
   // initializes left to point to the expression to return
  return_node(AST_node *n1, AST_node *n2) : AST_node(n1, n2) {
   }
+
+  virtual string generate_code(ofstream& f) {
+    f << "return " << left.generate_code;
+    return "";
+  }
+
 };
 
 class ternary_node : public AST_node {
