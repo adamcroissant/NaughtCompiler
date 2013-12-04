@@ -203,20 +203,32 @@ funcdef_list :
 
 funcdef :
 	  FUNCTION ID LPAREN param_list RPAREN block
-          { $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5 + *$6);
+          { $$ = new funcdef_node($2, $4, $6);
+            /*
+            $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5 + *$6);
             cout << *$$ << " -> funcdef " << endl;
+            */
           }
         | FUNCTION ID LPAREN RPAREN block
-          { $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
+          { $$ = new funcdef_node($2, nullptr, $5);
+            /*
+            $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
             cout << *$$ << " -> funcdef " << endl;
+            */
           }
 	| SFUNCTION ID LPAREN param_list RPAREN block
-          { $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5 + *$6);
+          { $$ = new sfuncdef_node($2, $4, $6);
+            /*
+            $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5 + *$6);
             cout << *$$ << " -> funcdef " << endl;
+            */
           }
         | SFUNCTION ID LPAREN RPAREN block
-          { $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
+          { $$ = new sfuncdef_node($2, nullptr, $5);
+            /*
+            $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
             cout << *$$ << " -> funcdef " << endl;
+            */
           }
         ;
 
