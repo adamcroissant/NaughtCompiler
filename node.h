@@ -118,10 +118,19 @@ class paramlist_node : public AST_node {
 
 class funcdef_node : public AST_node {
   public:
-    funcdef_node(string id, AST_node* param, AST_node* block) : AST_node(param, block) {
+    funcdef_node(string id, AST_node* paramlist, AST_node* block) : AST_node(paramlist, block) {
       this->id=id;
     }   
     string id;
+};
+
+class sfuncdef_node : public AST_node {
+ public:
+  string id;
+
+ sfuncdef_node(string id, AST_node* paramlist, AST_node* block) : AST_node(paramlist, block) {
+    this->id = id;
+  }
 };
 
 class block_node : public AST_node {
