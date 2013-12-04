@@ -260,7 +260,7 @@ class vardecl_node : public AST_node {
 };
 
 // for a function call
-class function_node : AST_node {
+class function_node : public AST_node {
  public:
   // initializes left to point to the expression to return                 
   string id;
