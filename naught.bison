@@ -220,7 +220,12 @@ vardecl :
 
 funcdef_list :
          funcdef
+         { $$ = new funcdef_list_node($1);
+         }
        | funcdef_list funcdef
+         { $1->list.push_back($2);
+           $$ = $1;
+         }
         ;
 
 funcdef :
