@@ -105,7 +105,7 @@ class stmtlist_node : public AST_node {
   }
   virtual string generate_code(ofstream& f) {
     for(size_t i=0; i<list.size(); i++) {
-      list[i].generate_code(f);
+      list[i]->generate_code(f);
     }
     return "";
   }
