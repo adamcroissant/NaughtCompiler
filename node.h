@@ -241,20 +241,20 @@ class vardecl_node : public AST_node {
  public:
   string type;
   string id;
-  bool isExtern = false;
+  bool isExtern;
 
 
- vardecl_node(string type, string id) : AST_node() {
+  /*vardecl_node(string type, string id) : AST_node() {
     this->type = type;
     this->id = id;
-  }
+  }*/
 
  vardecl_node(string type, string id, AST_node* assign) : AST_node(assign, nullptr) {
     this->type = type;
     this->id = id;
   }
 
- vardecl_node(bool e, string type, string id) : AST_node() {
+ vardecl_node(string type, string id, bool e = false) : AST_node() {
     isExtern = e;
     this->type = type;
     this->id = id;
