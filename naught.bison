@@ -173,17 +173,17 @@ funcdecl_list :
  
 funcdecl :
           FUNCTION ID LPAREN param_list RPAREN
-          { $$ = new funcdecl_node($2, $4);
+          { $$ = new funcdecl_node(*$2, $4);
           }
         | FUNCTION ID LPAREN  RPAREN
-          { $$ = new funcdecl_node($2, nullptr);
+          { $$ = new funcdecl_node(*$2, nullptr);
           }
         | SFUNCTION ID LPAREN param_list RPAREN
-          { $$ = new sfuncdecl_node($2, $4);  
+          { $$ = new sfuncdecl_node(*$2, $4);  
             //cout << *$$ << " -> funcdecl " << endl;
           }
         | SFUNCTION ID LPAREN  RPAREN
-          { $$ = new sfuncdecl_node($2, nullptr); 
+          { $$ = new sfuncdecl_node(*$2, nullptr); 
             //cout << *$$ << " -> funcdecl " << endl;
           }
 	;
@@ -209,15 +209,15 @@ vardecl_list :
 
 vardecl : 
          TYPE ID
-          { $$ = new vardecl_node($1, *$2);
+          { $$ = new vardecl_node(*$1, *$2);
             /*
             $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl " << endl;
             */
           }
        | TYPE ID ASSIGN expr
-          { $$ = new vardecl_node($1, *$2,
-               new assign_node(new variable_node($2), $4));
+          { $$ = new vardecl_node(*$1, *$2,
+               new assign_node(new variable_node(*$2), $4));
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
             cout << *$$ << " -> vardecl " << endl;
@@ -225,7 +225,7 @@ vardecl :
           }
        | EXTERN TYPE ID  /* extern variable */
           {
-            $$ = new vardecl_node(true, $2, *$3);
+            $$ = new vardecl_node(true, *$2, *$3);
             /*
             $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl " << endl;

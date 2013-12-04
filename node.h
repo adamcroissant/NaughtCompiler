@@ -202,7 +202,7 @@ class module_node : public AST_node {
   }
 };
 
-class return_node : AST_node {
+class return_node : public AST_node {
  public:
   // initializes left to point to the expression to return
  return_node(AST_node *n1, AST_node *n2) : AST_node(n1, n2) {
