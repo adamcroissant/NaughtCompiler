@@ -314,7 +314,7 @@ block :
           { $$ = new block_node($2, nullptr);
           }
         | LCBRACE RCBRACE
-          { $$ = new block_node($2, $3);
+          { $$ = new block_node(nullptr, nullptr);
           }
         ;
 
@@ -405,12 +405,19 @@ term :
 
 arglist :
         expr
-        { $$ = new StrUtil(*$1);
+        { $$ = new arglist_node($1);
+          /*
+          $$ = new StrUtil(*$1);
           cout << *$$ << " -> arglist" << endl;
+          */
         }
       | arglist COMMA expr
-        { $$ = new StrUtil( *$1 + *$2 + *$3 );
-        cout << *$$ << " -> arglist" << endl;
+        { $1->list.push_back($3);
+          $$ = $1;
+          /*
+          $$ = new StrUtil( *$1 + *$2 + *$3 );
+          cout << *$$ << " -> arglist" << endl;
+          */
         }
       ;
 
