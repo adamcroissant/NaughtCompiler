@@ -278,7 +278,19 @@ class module_node : public AST_node {
               AST_node* funcdecl_list) : AST_node(vardecl_list, funcdef_list) {
     this->funcdecl_list = funcdecl_list;
   }
+  virtual string generate_code(ofstream& f) {
+    if(funcdecl_list != nullptr) {
+      funcdecl_list->generate_code(f);
+    }
 
+    if(left != nullptr) {
+      left->generate_code(f);
+    }
+    if(right != nullptr) {
+      right->generate_code(f);
+    }
+    return "";
+  }
   ~module_node() {
     delete funcdecl_list;
   }
