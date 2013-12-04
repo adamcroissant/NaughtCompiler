@@ -76,7 +76,9 @@ int main(int argc, char **argv)
   if ( AST == nullptr ) return EXIT_SUCCESS;  // empty file?
   
   // Generate code
-  // ...
+  ofstream file(outFilename);
+  AST->generate_code(file);
+  file.close();
 
   // clean up
   delete AST;
