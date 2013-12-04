@@ -181,8 +181,10 @@ class assign_node : public AST_node {
 
 class IntLiteral_node : public AST_node {
  public:
-  const int literal;
- IntLiteral_node(int i) : literal(i) , AST_node() {}
+  int literal;
+ IntLiteral_node(int i) : AST_node() {
+    literal = i;
+  }
 };
 
 class stringliteral_node : public AST_node {
@@ -190,7 +192,7 @@ class stringliteral_node : public AST_node {
   nstring_st literal;
  stringliteral_node(string str) : AST_node() {
     literal.len = str.length();
-    for (int i = 0; i < str.length(); i ++) {
+    for (uint32_t i = 0; i < str.length(); i ++) {
       literal.str[i] = str[i];
     }
   }
