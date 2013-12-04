@@ -174,20 +174,18 @@ funcdecl_list :
  
 funcdecl :
           FUNCTION ID LPAREN param_list RPAREN
-          { $$ = new StrUtil(*$1 + *$2 +*$3 +*$4 +*$5);
-            cout << *$$ << " -> funcdecl " << endl;
+          { $$ = new funcdecl_node($2, $4);
           }
         | FUNCTION ID LPAREN  RPAREN
-          { $$ = new StrUtil(*$1 + *$2 +*$3 +*$4);
-            cout << *$$ << " -> funcdecl " << endl;
+          { $$ = new funcdecl_node($2, nullptr);
           }
         | SFUNCTION ID LPAREN param_list RPAREN
-          { $$ = new StrUtil(*$1 + *$2 +*$3 +*$4 +*$5);
-            cout << *$$ << " -> funcdecl " << endl;
+          { $$ = new sfuncdecl_node($2, $4);  
+            //cout << *$$ << " -> funcdecl " << endl;
           }
         | SFUNCTION ID LPAREN  RPAREN
-          { $$ = new StrUtil(*$1 + *$2 +*$3 +*$4);
-            cout << *$$ << " -> funcdecl " << endl;
+          { $$ = new sfuncdecl_node($2, nullptr); 
+            //cout << *$$ << " -> funcdecl " << endl;
           }
 	;
 
