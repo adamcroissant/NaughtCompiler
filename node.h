@@ -236,6 +236,12 @@ class sfuncdecl_node : public AST_node {
 class block_node : public AST_node {
   public:
     block_node(AST_node* vdecl_l, AST_node* stmt_l) : AST_node(vdecl_l, stmt_l) {}
+
+  virtual string generate_code(ofstream& f) {
+    left->generate_code(f);
+    right->generate_code(f);
+    return "";
+  }
 };
 
 class assign_node : public AST_node {
