@@ -51,6 +51,7 @@ class add_node : public AST_node {
 
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
+
     temp_count ++;
     f << temp << " = " << left->generate_code(f) << " + "
       << right->generate_code(f) << ";" << endl;
@@ -65,6 +66,7 @@ class mult_node : public AST_node {
 
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
+
     temp_count ++;
     f << temp << " = " << left->generate_code(f) << " * "
       << right->generate_code(f) << ";" << endl;
@@ -207,7 +209,11 @@ class funcdef_node : public AST_node {
     }   
     string id;
     virtual string generate_code(ofstream& f) {
-      f <<"int " << id << "("<< left->generate_code(f) << ") {" << endl;
+      f <<"int " << id << "(";
+      if (left != nullptr) {
+        f << left->generate_code(f);
+      }
+      f << ") {" << endl;
       f << right->generate_code(f) << endl;
       f << "}" << endl;
       return "";
