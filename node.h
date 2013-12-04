@@ -199,6 +199,12 @@ class funcdef_node : public AST_node {
       this->id=id;
     }   
     string id;
+    virtual string generate_code(ofstream& f) {
+      f <<"int " << id << "("<< left->generate_code(f) << ") {" << endl;
+      f << right->generate_code(f) << endl;
+      f << "}" << endl;
+      return "";
+    }
 };
 
 class sfuncdef_node : public AST_node {
