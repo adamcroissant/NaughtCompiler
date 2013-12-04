@@ -276,4 +276,8 @@ class param_node : public AST_node {
   }
 };
 
+class print_node : public AST_node {
+  public:
+    print_node(AST_node* term) : AST_node(term, nullptr) {}
+}
 #endif /* NODE_H */

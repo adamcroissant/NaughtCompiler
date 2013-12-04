@@ -55,6 +55,7 @@ extern AST_node *AST;
   vardecl_node*           vardecl;
   function_node*          function; 
   param_node*             param;
+  print_node*             print;
 }
 
 /***********************************************************************
@@ -387,8 +388,8 @@ term :
          */
         }
       | UNARY_OP term
-        { $$ = new StrUtil( *$1 + *$2);
-          cout << *$$ << " -> term" << endl;
+        { $$ = new print_node($2);
+          //cout << *$$ << " -> term" << endl;
         }
       | ID LPAREN arglist RPAREN  /* function call */
        { $$ = new function_node(*$1, $2);
