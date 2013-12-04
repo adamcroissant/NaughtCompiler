@@ -5,6 +5,9 @@
 #include <string>
 #include <vector>
 using namespace std;
+
+int temp_count;
+
 class AST_node {
  public:
   AST_node* left;
@@ -31,28 +34,65 @@ class variable_node : public AST_node {
     variable_node(string s) : AST_node() { 
       var_name=s;
     }
-    //~variable_node();
+
     string var_name;
+
+    virtual string generate_code(ofstream& f) {
+      return var_name;
+    }
 };
 
 class add_node : public AST_node {
   public:
     add_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+
+  virtual string generate_code(ofstream& f) {
+    string temp = "temp_" + to_string(temp_count);
+    temp_count ++;
+    f << temp << " = " << left.generate_code() << " + "
+      << right.generate_code() << ";" << endl;
+    return temp;
+  }
+
 };
 
 class mult_node : public AST_node {
   public:
     mult_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+
+  virtual string generate_code(ofstream& f) {
+    string temp = "temp_" + to_string(temp_count);
+    temp_count ++;
+    f << temp << " = " << left.generate_code() << " * "
+      << right.generate_code() << ";" << endl;
+    return temp;
+  }
 };
 
 class sub_node : public AST_node {
   public:
     sub_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+
+  virtual string generate_code(ofstream& f) {
+    string temp = "temp_" + to_string(temp_count);
+    temp_count ++;
+    f << temp << " = " << left.generate_code() << " - "
+      << right.generate_code() << ";" << endl;
+    return temp;
+  }
 };
 
 class div_node : public AST_node {
   public:
     div_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+
+  virtual string generate_code(ofstream& f) {
+    string temp = "temp_" + to_string(temp_count);
+    temp_count ++;
+    f << temp << " = " << left.generate_code() << " / "
+      << right.generate_code() << ";" << endl;
+    return temp;
+  }
 };
 
 class stmtlist_node : public AST_node {
