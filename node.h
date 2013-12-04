@@ -12,7 +12,7 @@ class AST_node {
  public:
   AST_node* left;
   AST_node* right;
-  virtual string generate_code(FILE *file){}
+  virtual string generate_code(ofstream& f){}
   AST_node() {
     left = nullptr;
     right = nullptr;
