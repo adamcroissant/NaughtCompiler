@@ -308,7 +308,7 @@ block :
           { $$ = new block_node($2, $3);
           }
 	| LCBRACE              stmt_list RCBRACE
-          { $$ = new block_node(nullptr, $3);
+          { $$ = new block_node(nullptr, $2);
           }
 	| LCBRACE vardecl_list           RCBRACE
           { $$ = new block_node($2, nullptr);
