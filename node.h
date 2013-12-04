@@ -53,23 +53,22 @@ class div_node : public AST_node {
 
 class stmtlist_node : public AST_node {
   public:
+  vector<AST_node*> list;
+
  stmtlist_node(AST_node* node) : AST_node() {
-    list = new vector<AST_node*>();
     list.push_back(node);
   }
-  vector<AST_node*> list;
+  
   ~stmtlist_node() {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
-    delete list;
   }
 };
 
 class vardecl_list_node : public AST_node {
  public:
  vardecl_list_node(AST_node* node) : AST_node() {
-    list = new vector<AST_node*>();
     list.push_back(node);
   }
   vector<AST_node*> list;
@@ -77,44 +76,38 @@ class vardecl_list_node : public AST_node {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
-    delete list;
   }
 };
 
 class funcdef_list_node : public AST_node {
  public:
  funcdef_list_node(AST_node* node) : AST_node() {
-    list = new vector<AST_node*>();
-    list.push_back(node);;
+    list.push_back(node);
   }
   vector<AST_node*> list;
   ~funcdef_list_node() {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
-    delete list;
   }
 };
 
 class funcdecl_list_node : public AST_node {
   public:
  funcdecl_list_node(AST_node* node) : AST_node() {
-    list = new vector<AST_node*>();
-    list.push_back(node);;
+    list.push_back(node);
   }
   vector<AST_node*> list;
   ~funcdecl_list_node() {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
-    delete list;
   }
 };
 
 class arglist_node : public AST_node {
  public:
  arglist_node(AST_node* node) : AST_node() {
-    list = new vector<AST_node*>();
     list.push_back(node);
   }
   vector<AST_node*> list;
@@ -122,14 +115,12 @@ class arglist_node : public AST_node {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
-    delete list;
   }
 };
 
 class paramlist_node : public AST_node {
  public:
  paramlist_node(AST_node* node) : AST_node() {
-    list = new vector<AST_node*>();
     list.push_back(node);
   }
   vector<AST_node*> list;
@@ -137,7 +128,6 @@ class paramlist_node : public AST_node {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
-    delete list;
   }
 };
 
@@ -160,7 +150,7 @@ class sfuncdef_node : public AST_node {
 
 class funcdecl_node : public AST_node {
   public:
-    funcdef_node(string id, AST_node* paramlist) : AST_node(paramlist, nullptr) {
+    funcdecl_node(string id, AST_node* paramlist) : AST_node(paramlist, nullptr) {
       this->id=id;
     }
     string id;
@@ -170,7 +160,7 @@ class sfuncdecl_node : public AST_node {
  public:
   string id;
 
- sfuncdef_node(string id, AST_node* paramlist) : AST_node(paramlist, nullptr) {
+ sfuncdecl_node(string id, AST_node* paramlist) : AST_node(paramlist, nullptr) {
     this->id = id;
   }
 };

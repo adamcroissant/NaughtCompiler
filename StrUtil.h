@@ -8,8 +8,7 @@ using namespace std;
 // A class that simplfies simply printing which
 // grammar rules fire.
 // This class is of no use in the naught compiler.
-class AST_node;
-class StrUtil : public AST_node {
+class StrUtil {
  public:
  StrUtil(const string &s) : str(s){}
   StrUtil operator+(const StrUtil &other) {

@@ -69,15 +69,38 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 31 "naught.bison"
+#line 29 "naught.bison"
 
-  StrUtil*    string_val;
+  string*                 string_val;
+  int32_t*                intlit;
   IntLiteral_node*        int_val;
+  AST_node*               node;
+  variable_node*          var;
+  add_node*               add;
+  sub_node*               sub;
+  div_node*               div;
+  mult_node*              mult;
+  stmtlist_node*          stmtlist;
+  vardecl_list_node*      vardecl_list;
+  funcdef_list_node*      funcdef_list;
+  funcdecl_list_node*     funcdecl_list;
+  arglist_node*           arglist;
+  paramlist_node*         paramlist;
+  funcdef_node*           funcdef;
+  block_node*             block;
+  assign_node*            assign;
+  stringliteral_node*     strlit;
+  module_node*            module;
+  return_node*            return;
+  ternary_node*           ternary;
+  vardecl_node*           vardecl;
+  function_node*          function; 
+  param_node*             param;
 
 
 
 /* Line 2068 of yacc.c  */
-#line 81 "parser.hh"
+#line 104 "parser.hh"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

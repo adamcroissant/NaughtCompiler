@@ -119,42 +119,42 @@ extern AST_node *AST;
 module :
          funcdecl_list vardecl_list funcdef_list
           { AST = new module_node($2, $3, $1);
-            $$ = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
         |              vardecl_list funcdef_list
           { AST = new module_node($1, $2, nullptr);
-            $$ = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
         | funcdecl_list             funcdef_list
           { AST = new module_node(nullptr, $2, $1);
-            $$ = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
         |                            funcdef_list
           { AST = new module_node(nullptr, $1, nullptr);
-            $$ = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
         | funcdecl_list vardecl_list
           { AST = new module_node($2, nullptr, $1);
-            $$ = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
         |              vardecl_list
           { AST = new module_node($1, nullptr, nullptr);
-            $$ = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
         | funcdecl_list             
           { AST = new module_node(nullptr, nullptr, $1);
-            $$ = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
         |
           { AST = new module_node(nullptr, nullptr, nullptr);
-            $$ = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
         ;
@@ -405,12 +405,19 @@ term :
 
 arglist :
         expr
-        { $$ = new StrUtil(*$1);
+        { $$ = new arglist_node($1);
+          /*
+          $$ = new StrUtil(*$1);
           cout << *$$ << " -> arglist" << endl;
+          */
         }
       | arglist COMMA expr
-        { $$ = new StrUtil( *$1 + *$2 + *$3 );
-        cout << *$$ << " -> arglist" << endl;
+        { $1->list.push_back($3);
+          $$ = $1;
+          /*
+          $$ = new StrUtil( *$1 + *$2 + *$3 );
+          cout << *$$ << " -> arglist" << endl;
+          */
         }
       ;
 
