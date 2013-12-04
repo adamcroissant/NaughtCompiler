@@ -7,7 +7,7 @@
 #include <fstream>
 using namespace std;
 
-int temp_count;
+static int temp_count;
 
 class AST_node {
  public:
