@@ -152,6 +152,13 @@ class funcdef_list_node : public AST_node {
       delete list[i];
     }
   }
+
+  virtual string generate_code(ofstream& f) {
+    for (uint32_t i = 0; i < list.size(); i ++) {
+      list[i]->generate_code(f);
+    }
+    return "";
+  }
 };
 
 class funcdecl_list_node : public AST_node {
@@ -232,8 +239,13 @@ class block_node : public AST_node {
     block_node(AST_node* vdecl_l, AST_node* stmt_l) : AST_node(vdecl_l, stmt_l) {}
 
   virtual string generate_code(ofstream& f) {
-    left->generate_code(f);
-    right->generate_code(f);
+    if (left != nullptr) {
+      left->generate_code(f);
+    }
+    
+    if (right != nullptr) {
+      right->generate_code(f);
+    }
     return "";
   }
 };
