@@ -277,7 +277,7 @@ class return_node : public AST_node {
   }
 
   virtual string generate_code(ofstream& f) {
-    f << "return " << left.generate_code;
+    f << "return " << left->generate_code(f);
     return "";
   }
 
