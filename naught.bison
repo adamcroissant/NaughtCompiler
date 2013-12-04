@@ -28,7 +28,7 @@ extern AST_node *AST;
  ***************************************/
 %union {
   StrUtil*                string_val;
-  int32_t*                intlit;
+  //int32_t*                intlit;
   IntLiteral_node*        int_val;
   AST_node*               node;
   variable_node*          var;
@@ -81,7 +81,7 @@ extern AST_node *AST;
 
 %token <string_val> TYPE
 %token <string_val> STRING_LITERAL
-%token <intlit> INT_LITERAL
+%token <string_val> INT_LITERAL
 %token <string_val> ID
 
 /**********************************************************
@@ -371,7 +371,7 @@ term :
         { $$ = new stringliteral_node($1->getString());
         }
       | INT_LITERAL
-        { $$ = new IntLiteral_node(*$1);
+        { $$ = new IntLiteral_node(atoi(($1->getString()).c_str()));
         }
       | ID
         { $$ = new variable_node($1->getString());
