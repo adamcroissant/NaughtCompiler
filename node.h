@@ -260,6 +260,12 @@ class return_node : public AST_node {
   // initializes left to point to the expression to return
  return_node(AST_node *n1, AST_node *n2) : AST_node(n1, n2) {
   }
+
+  virtual string generate_code(ofstream& f) {
+    f << "return " << left.generate_code;
+    return "";
+  }
+
 };
 
 class ternary_node : public AST_node {
