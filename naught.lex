@@ -9,9 +9,9 @@
 
  int yyerror(char *s);
 
+ #include "node.h"
  #include "StrUtil.h"
  #include "parser.hh"
- #include "node.h"
 %}
 
 digit       [0-9]

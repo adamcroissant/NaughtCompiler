@@ -27,7 +27,7 @@ extern AST_node *AST;
  * name used later in this file.
  ***************************************/
 %union {
-  string*                 string_val;
+  StrUtil*                string_val;
   int32_t*                intlit;
   IntLiteral_node*        int_val;
   AST_node*               node;
@@ -177,17 +177,17 @@ funcdecl_list :
  
 funcdecl :
           FUNCTION ID LPAREN param_list RPAREN
-          { $$ = new funcdecl_node(*$2, $4);
+          { $$ = new funcdecl_node($2->getString(), $4);
           }
         | FUNCTION ID LPAREN  RPAREN
-          { $$ = new funcdecl_node(*$2, nullptr);
+          { $$ = new funcdecl_node($2->getString(), nullptr);
           }
         | SFUNCTION ID LPAREN param_list RPAREN
-          { $$ = new sfuncdecl_node(*$2, $4);  
+          { $$ = new sfuncdecl_node($2->getString(), $4);  
             //cout << *$$ << " -> funcdecl " << endl;
           }
         | SFUNCTION ID LPAREN  RPAREN
-          { $$ = new sfuncdecl_node(*$2, nullptr); 
+          { $$ = new sfuncdecl_node($2->getString(), nullptr); 
             //cout << *$$ << " -> funcdecl " << endl;
           }
 	;
@@ -213,15 +213,15 @@ vardecl_list :
 
 vardecl : 
          TYPE ID
-          { $$ = new vardecl_node(*$1, *$2);
+          { $$ = new vardecl_node($1->getString(), $2->getString());
             /*
             $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl " << endl;
             */
           }
        | TYPE ID ASSIGN expr
-          { $$ = new vardecl_node(*$1, *$2,
-               new assign_node(new variable_node(*$2), $4));
+          { $$ = new vardecl_node($1->getString(), $2->getString(),
+               new assign_node(new variable_node($2->getString()), $4));
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
             cout << *$$ << " -> vardecl " << endl;
@@ -229,7 +229,7 @@ vardecl :
           }
        | EXTERN TYPE ID  /* extern variable */
           {
-            $$ = new vardecl_node(true, *$2, *$3);
+            $$ = new vardecl_node(true, $2->getString(), $3->getString());
             /*
             $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl " << endl;
@@ -250,28 +250,28 @@ funcdef_list :
 
 funcdef :
 	  FUNCTION ID LPAREN param_list RPAREN block
-          { $$ = new funcdef_node(*$2, $4, $6);
+          { $$ = new funcdef_node($2->getString(), $4, $6);
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5 + *$6);
             cout << *$$ << " -> funcdef " << endl;
             */
           }
         | FUNCTION ID LPAREN RPAREN block
-          { $$ = new funcdef_node(*$2, nullptr, $5);
+          { $$ = new funcdef_node($2->getString(), nullptr, $5);
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
             cout << *$$ << " -> funcdef " << endl;
             */
           }
 	| SFUNCTION ID LPAREN param_list RPAREN block
-          { $$ = new sfuncdef_node(*$2, $4, $6);
+          { $$ = new sfuncdef_node($2->getString(), $4, $6);
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5 + *$6);
             cout << *$$ << " -> funcdef " << endl;
             */
           }
         | SFUNCTION ID LPAREN RPAREN block
-          { $$ = new sfuncdef_node(*$2, nullptr, $5);
+          { $$ = new sfuncdef_node($2->getString(), nullptr, $5);
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
             cout << *$$ << " -> funcdef " << endl;
@@ -299,7 +299,7 @@ param_list :
 
 param :
          TYPE ID
-          { $$ = new param_node(*$1, *$2);
+          { $$ = new param_node($1->getString(), $2->getString());
             /*
             $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> param " << endl;
@@ -368,13 +368,13 @@ expr :
 
 term :
         STRING_LITERAL
-        { $$ = new stringliteral_node(*$1);
+        { $$ = new stringliteral_node($1->getString());
         }
       | INT_LITERAL
         { $$ = new IntLiteral_node(*$1);
         }
       | ID
-        { $$ = new variable_node(*$1);
+        { $$ = new variable_node($1->getString());
           /*
           $$ = new StrUtil(*$1);
           cout << *$$ << " -> term" << endl;
@@ -392,14 +392,14 @@ term :
           //cout << *$$ << " -> term" << endl;
         }
       | ID LPAREN arglist RPAREN  /* function call */
-       { $$ = new function_node(*$1, $3);
+       { $$ = new function_node($1->getString(), $3);
          /*
          $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
          cout << *$$ << " -> term" << endl;
          */
        }
       | ID LPAREN RPAREN  /* function call - no params */
-       { $$ = new function_node(*$1, nullptr);
+       { $$ = new function_node($1->getString(), nullptr);
          /*
          $$ = new StrUtil(*$1 + *$2 + *$3);
          cout << *$$ << " -> term" << endl;

@@ -20,6 +20,10 @@ class StrUtil {
     return os;
   }
 
+  string getString() {
+    return str;
+  }
+
  private:
   string str;
 };
