@@ -204,16 +204,27 @@ vardecl_list :
 
 vardecl : 
          TYPE ID
-          { $$ = new StrUtil(*$1 + *$2);
+          { $$ = new vardecl_node($1, $2);
+            /*
+            $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl " << endl;
+            */
           }
        | TYPE ID ASSIGN expr
-          { $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
+          { $$ = new vardecl_node($1, $2,
+               new assign_node(new variable_node($2), $4));
+            /*
+            $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
             cout << *$$ << " -> vardecl " << endl;
+            */
           }
        | EXTERN TYPE ID  /* extern variable */
-          { $$ = new StrUtil(*$1 + *$2);
+          {
+            $$ = new vardecl_node(true, $2, $3);
+            /*
+            $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl " << endl;
+            */
           }
        ;
 
