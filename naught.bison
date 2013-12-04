@@ -211,14 +211,14 @@ vardecl_list :
 
 vardecl : 
          TYPE ID
-          { $$ = new vardecl_node($1, $2);
+          { $$ = new vardecl_node($1, *$2);
             /*
             $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl " << endl;
             */
           }
        | TYPE ID ASSIGN expr
-          { $$ = new vardecl_node($1, $2,
+          { $$ = new vardecl_node($1, *$2,
                new assign_node(new variable_node($2), $4));
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
@@ -227,7 +227,7 @@ vardecl :
           }
        | EXTERN TYPE ID  /* extern variable */
           {
-            $$ = new vardecl_node(true, $2, $3);
+            $$ = new vardecl_node(true, $2, *$3);
             /*
             $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl " << endl;
@@ -248,28 +248,28 @@ funcdef_list :
 
 funcdef :
 	  FUNCTION ID LPAREN param_list RPAREN block
-          { $$ = new funcdef_node($2, $4, $6);
+          { $$ = new funcdef_node(*$2, $4, $6);
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5 + *$6);
             cout << *$$ << " -> funcdef " << endl;
             */
           }
         | FUNCTION ID LPAREN RPAREN block
-          { $$ = new funcdef_node($2, nullptr, $5);
+          { $$ = new funcdef_node(*$2, nullptr, $5);
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
             cout << *$$ << " -> funcdef " << endl;
             */
           }
 	| SFUNCTION ID LPAREN param_list RPAREN block
-          { $$ = new sfuncdef_node($2, $4, $6);
+          { $$ = new sfuncdef_node(*$2, $4, $6);
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5 + *$6);
             cout << *$$ << " -> funcdef " << endl;
             */
           }
         | SFUNCTION ID LPAREN RPAREN block
-          { $$ = new sfuncdef_node($2, nullptr, $5);
+          { $$ = new sfuncdef_node(*$2, nullptr, $5);
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
             cout << *$$ << " -> funcdef " << endl;
