@@ -61,6 +61,7 @@ class stmtlist_node : public AST_node {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
+    delete list;
   }
 };
 
@@ -75,6 +76,7 @@ class vardecl_list_node : public AST_node {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
+    delete list;
   }
 };
 
@@ -89,6 +91,7 @@ class funcdef_list_node : public AST_node {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
+    delete list;
   }
 };
 
@@ -103,6 +106,7 @@ class funcdecl_list_node : public AST_node {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
+    delete list;
   }
 };
 
@@ -117,6 +121,7 @@ class arglist_node : public AST_node {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
+    delete list;
   }
 };
 
@@ -131,6 +136,7 @@ class paramlist_node : public AST_node {
     for(size_t i=0; i<list.size(); i++) {
       delete list[i];
     }
+    delete list;
   }
 };
 
