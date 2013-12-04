@@ -12,7 +12,7 @@ class AST_node {
  public:
   AST_node* left;
   AST_node* right;
-
+  virtual string generate_code(FILE *file){}
   AST_node() {
     left = nullptr;
     right = nullptr;
@@ -235,7 +235,7 @@ class stringliteral_node : public AST_node {
   nstring_st literal;
  stringliteral_node(string str) : AST_node() {
     literal.len = str.length();
-    for (uint32_t i = 0; i < str.length(); i ++) {
+    for (size_t i = 0; i < str.length(); i ++) {
       literal.str[i] = str[i];
     }
   }
