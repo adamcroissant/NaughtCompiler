@@ -157,6 +157,23 @@ class sfuncdef_node : public AST_node {
   }
 };
 
+class funcdecl_node : public AST_node {
+  public:
+    funcdef_node(string id, AST_node* paramlist) : AST_node(paramlist, nullptr) {
+      this->id=id;
+    }
+    string id;
+};
+
+class sfuncdecl_node : public AST_node {
+ public:
+  string id;
+
+ sfuncdef_node(string id, AST_node* paramlist) : AST_node(paramlist, nullptr) {
+    this->id = id;
+  }
+};
+
 class block_node : public AST_node {
   public:
     block_node(AST_node* vdecl_l, AST_node* stmt_l) : AST_node(vdecl_l, stmt_l) {}

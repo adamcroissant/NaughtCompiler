@@ -162,12 +162,13 @@ module :
 
 funcdecl_list :
           funcdecl_list funcdecl SEMI
-          { $$ = new StrUtil(*$1 + *$2 + *$3);
-            cout << *$$ << " -> funcdecl_list " << endl;
+          { $1->list.push_back($2);
+	    $$ = $1;
+//          cout << *$$ << " -> funcdecl_list " << endl;
           }
         | funcdecl SEMI
-          { $$ = new funcdecl_list_node;
-            cout << *$$ << " -> funcdecl_list " << endl;
+          { $$ = new funcdecl_list_node($1);
+//            cout << *$$ << " -> funcdecl_list " << endl;
           }
        ;
  
