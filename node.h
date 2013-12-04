@@ -13,7 +13,9 @@ class AST_node {
  public:
   AST_node* left;
   AST_node* right;
-  virtual string generate_code(ofstream& f){}
+  virtual string generate_code(ofstream& f){
+    return "";
+  }
   AST_node() {
     left = nullptr;
     right = nullptr;
@@ -24,7 +26,7 @@ class AST_node {
     this->right = right;
   }
 
-  ~AST_node() {
+  virtual ~AST_node() {
     delete left;
     delete right;
   }
@@ -270,7 +272,7 @@ class return_node : public AST_node {
   }
 
   virtual string generate_code(ofstream& f) {
-    f << "return " << left.generate_code;
+    f << "return " << left->generate_code(f) << ";";
     return "";
   }
 
