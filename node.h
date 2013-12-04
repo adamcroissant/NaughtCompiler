@@ -232,30 +232,30 @@ class ternary_node : AST_node {
 };
 
 // for tracking type of variable declaration
-enum var_type {
+/*enum var_type {
   INT, STRING, POINTER
-};
+  };*/
 
 class vardecl_node : public AST_node {
  public:
-  var_type t;
+  string type;
   string id;
   bool isExtern = false;
 
 
- vardecl_node(var_type t, string id) : AST_node() {
-    this->t = t;
+ vardecl_node(string type, string id) : AST_node() {
+    this->type = type;
     this->id = id;
   }
 
- vardecl_node(var_type t, string id, AST_node* assign) : AST_node(assign, nullptr) {
-    this->t = t;
+ vardecl_node(string type, string id, AST_node* assign) : AST_node(assign, nullptr) {
+    this->type = type;
     this->id = id;
   }
 
- vardecl_node(bool e, var_type t, string id) : AST_node() {
+ vardecl_node(bool e, string type, string id) : AST_node() {
     isExtern = e;
-    this->t = t;
+    this->type = type;
     this->id = id;
   }
 };
@@ -276,10 +276,10 @@ class function_node : AST_node {
 class param_node : public AST_node {
  public:
   string id;
-  var_type t;
+  string type;
 
- param_node(var_type t, string id) : AST_node() {
-    this->t = t;
+ param_node(string type, string id) : AST_node() {
+    this->type = type;
     this->id = id;
   }
 };

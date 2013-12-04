@@ -8,15 +8,13 @@
 
 #include "yy.h"
 #include "StrUtil.h"
-#include "AST_node.h"
-#include "IntLiteral_node.h"
+#include "node.h"
 
 using namespace std;
 
 extern int _WANT_DEBUG;
 
 extern AST_node *AST;
-
 
 %}
 
@@ -29,7 +27,8 @@ extern AST_node *AST;
  * name used later in this file.
  ***************************************/
 %union {
-  StrUtil*    string_val;
+  string*                 string_val;
+  int32_t*                intlit;
   IntLiteral_node*        int_val;
   AST_node*               node;
   variable_node*          var;
@@ -78,7 +77,7 @@ extern AST_node *AST;
 
 %token <string_val> TYPE
 %token <string_val> STRING_LITERAL
-%token <string_val> INT_LITERAL
+%token <intlit> INT_LITERAL
 %token <string_val> ID
 
 /**********************************************************
