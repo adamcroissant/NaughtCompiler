@@ -229,7 +229,7 @@ vardecl :
           }
        | EXTERN TYPE ID  /* extern variable */
           {
-            $$ = new vardecl_node(true, $2->getString(), $3->getString());
+            $$ = new vardecl_node($2->getString(), $3->getString(), true);
             /*
             $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl " << endl;
