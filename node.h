@@ -4,6 +4,7 @@
 #include "nstring.h"
 #include <string>
 #include <vector>
+#include <fstream>
 using namespace std;
 
 int temp_count;
@@ -49,8 +50,8 @@ class add_node : public AST_node {
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
     temp_count ++;
-    f << temp << " = " << left.generate_code() << " + "
-      << right.generate_code() << ";" << endl;
+    f << temp << " = " << left->generate_code() << " + "
+      << right->generate_code() << ";" << endl;
     return temp;
   }
 
@@ -63,8 +64,8 @@ class mult_node : public AST_node {
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
     temp_count ++;
-    f << temp << " = " << left.generate_code() << " * "
-      << right.generate_code() << ";" << endl;
+    f << temp << " = " << left->generate_code() << " * "
+      << right->generate_code() << ";" << endl;
     return temp;
   }
 };
@@ -76,8 +77,8 @@ class sub_node : public AST_node {
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
     temp_count ++;
-    f << temp << " = " << left.generate_code() << " - "
-      << right.generate_code() << ";" << endl;
+    f << temp << " = " << left->generate_code() << " - "
+      << right->generate_code() << ";" << endl;
     return temp;
   }
 };
@@ -89,8 +90,8 @@ class div_node : public AST_node {
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
     temp_count ++;
-    f << temp << " = " << left.generate_code() << " / "
-      << right.generate_code() << ";" << endl;
+    f << temp << " = " << left->generate_code() << " / "
+      << right->generate_code() << ";" << endl;
     return temp;
   }
 };
