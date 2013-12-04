@@ -166,7 +166,7 @@ funcdecl_list :
             cout << *$$ << " -> funcdecl_list " << endl;
           }
         | funcdecl SEMI
-          { $$ = new StrUtil(*$1 + *$2);
+          { $$ = new funcdecl_list_node;
             cout << *$$ << " -> funcdecl_list " << endl;
           }
        ;
