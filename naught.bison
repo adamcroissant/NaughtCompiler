@@ -194,27 +194,45 @@ funcdecl :
 
 vardecl_list : 
           vardecl_list vardecl SEMI
-          { $$ = new StrUtil(*$1 + *$2 +*$3);
+          { $1->list.push_back($2);
+            $$ = $1;
+            /*
+            $$ = new StrUtil(*$1 + *$2 +*$3);
             cout << *$$ << " -> vardecl_list " << endl;
+            */
           }
         | vardecl SEMI
-          { $$ = new StrUtil(*$1 + *$2);
+          { $$ = new vardecl_list_node($1);
+            /*
+            $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl_list " << endl;
+            */
           }
         ;
 
 vardecl : 
          TYPE ID
-          { $$ = new StrUtil(*$1 + *$2);
+          { $$ = new vardecl_node($1, *$2);
+            /*
+            $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl " << endl;
+            */
           }
        | TYPE ID ASSIGN expr
-          { $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
+          { $$ = new vardecl_node($1, *$2,
+               new assign_node(new variable_node($2), $4));
+            /*
+            $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
             cout << *$$ << " -> vardecl " << endl;
+            */
           }
        | EXTERN TYPE ID  /* extern variable */
-          { $$ = new StrUtil(*$1 + *$2);
+          {
+            $$ = new vardecl_node(true, $2, *$3);
+            /*
+            $$ = new StrUtil(*$1 + *$2);
             cout << *$$ << " -> vardecl " << endl;
+            */
           }
        ;
 
@@ -231,28 +249,28 @@ funcdef_list :
 
 funcdef :
 	  FUNCTION ID LPAREN param_list RPAREN block
-          { $$ = new funcdef_node($2, $4, $6);
+          { $$ = new funcdef_node(*$2, $4, $6);
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5 + *$6);
             cout << *$$ << " -> funcdef " << endl;
             */
           }
         | FUNCTION ID LPAREN RPAREN block
-          { $$ = new funcdef_node($2, nullptr, $5);
+          { $$ = new funcdef_node(*$2, nullptr, $5);
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
             cout << *$$ << " -> funcdef " << endl;
             */
           }
 	| SFUNCTION ID LPAREN param_list RPAREN block
-          { $$ = new sfuncdef_node($2, $4, $6);
+          { $$ = new sfuncdef_node(*$2, $4, $6);
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5 + *$6);
             cout << *$$ << " -> funcdef " << endl;
             */
           }
         | SFUNCTION ID LPAREN RPAREN block
-          { $$ = new sfuncdef_node($2, nullptr, $5);
+          { $$ = new sfuncdef_node(*$2, nullptr, $5);
             /*
             $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
             cout << *$$ << " -> funcdef " << endl;

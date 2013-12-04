@@ -222,20 +222,24 @@ enum var_type {
 class vardecl_node : public AST_node {
  public:
   var_type t;
+  string id;
   bool isExtern = false;
 
 
- vardecl_node(var_type t, AST_node* id) : AST_node(id, nullptr) {
+ vardecl_node(var_type t, string id) : AST_node() {
     this->t = t;
+    this->id = id;
   }
 
- vardecl_node(var_type t, AST_node* id, AST_node* assign) : AST_node(id, assign) {
+ vardecl_node(var_type t, string id, AST_node* assign) : AST_node(assign, nullptr) {
     this->t = t;
+    this->id = id;
   }
 
- vardecl_node(bool e, var_type t, AST_node* id) : AST_node(id, nullptr) {
+ vardecl_node(bool e, var_type t, string id) : AST_node() {
     isExtern = e;
     this->t = t;
+    this->id = id;
   }
 };
 
