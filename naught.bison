@@ -8,8 +8,7 @@
 
 #include "yy.h"
 #include "StrUtil.h"
-#include "AST_node.h"
-#include "IntLiteral_node.h"
+#include "node.h"
 
 using namespace std;
 
