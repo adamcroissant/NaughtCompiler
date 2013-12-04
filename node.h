@@ -50,8 +50,8 @@ class add_node : public AST_node {
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
     temp_count ++;
-    f << temp << " = " << left->generate_code() << " + "
-      << right->generate_code() << ";" << endl;
+    f << temp << " = " << left->generate_code(f) << " + "
+      << right->generate_code(f) << ";" << endl;
     return temp;
   }
 
@@ -64,8 +64,8 @@ class mult_node : public AST_node {
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
     temp_count ++;
-    f << temp << " = " << left->generate_code() << " * "
-      << right->generate_code() << ";" << endl;
+    f << temp << " = " << left->generate_code(f) << " * "
+      << right->generate_code(f) << ";" << endl;
     return temp;
   }
 };
@@ -77,8 +77,8 @@ class sub_node : public AST_node {
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
     temp_count ++;
-    f << temp << " = " << left->generate_code() << " - "
-      << right->generate_code() << ";" << endl;
+    f << temp << " = " << left->generate_code(f) << " - "
+      << right->generate_code(f) << ";" << endl;
     return temp;
   }
 };
@@ -90,8 +90,8 @@ class div_node : public AST_node {
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
     temp_count ++;
-    f << temp << " = " << left->generate_code() << " / "
-      << right->generate_code() << ";" << endl;
+    f << temp << " = " << left->generate_code(f) << " / "
+      << right->generate_code(f) << ";" << endl;
     return temp;
   }
 };
@@ -227,7 +227,7 @@ class IntLiteral_node : public AST_node {
     literal = i;
   }
   virtual string generate_code(ofstream& f) {
-    return literal.to_string();
+    return to_string(literal);
   }
 };
 
