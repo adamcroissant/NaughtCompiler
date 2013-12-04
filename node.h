@@ -1,6 +1,7 @@
 #ifndef __NODE_H__
 #define __NODE_H__
 
+#include "nstring.h"
 #include <string>
 #include <vector>
 using namespace std;
@@ -35,19 +36,20 @@ class variable_node : public AST_node {
 };
 
 class add_node : public AST_node {
-
+  public:
+    add_node(AST_node* left, AST_node* right) : Ast_node(left, right) {}
 };
 
 class mult_node : public AST_node {
-
+  mult_node(AST_node* left, AST_node* right) : Ast_node(left, right) {}
 };
 
 class sub_node : public AST_node {
-
+  sub_node(AST_node* left, AST_node* right) : Ast_node(left, right) {}
 };
 
 class div_node : public AST_node {
-
+  div_node(AST_node* left, AST_node* right) : Ast_node(left, right) {}
 };
 
 class stmtlist_node : public AST_node {
@@ -200,7 +202,7 @@ class module_node : public AST_node {
   }
 };
 
-class return_node : AST_node {
+class return_node : public AST_node {
  public:
   // initializes left to point to the expression to return
  return_node(AST_node *n1, AST_node *n2) : AST_node(n1, n2) {
