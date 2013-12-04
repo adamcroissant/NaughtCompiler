@@ -36,13 +36,16 @@ extern AST_node *AST;
   sub_node*               sub;
   div_node*               div;
   mult_node*              mult;
-  stmtlist_node*          stmtlist;
+  stmtlist_node*          stmt_list;
   vardecl_list_node*      vardecl_list;
   funcdef_list_node*      funcdef_list;
   funcdecl_list_node*     funcdecl_list;
   arglist_node*           arglist;
-  paramlist_node*         paramlist;
+  paramlist_node*         param_list;
   funcdef_node*           funcdef;
+  sfuncdef_node		  sfuncdef;
+  funcdecl_node		  funcdecl;
+  sfuncdecl_node	  sfuncdecl;
   block_node*             block;
   assign_node*            assign;
   stringliteral_node*     strlit;
@@ -52,6 +55,7 @@ extern AST_node *AST;
   vardecl_node*           vardecl;
   function_node*          function; 
   param_node*             param;
+  print_node*             print;
 }
 
 /***********************************************************************
@@ -384,8 +388,8 @@ term :
          */
         }
       | UNARY_OP term
-        { $$ = new StrUtil( *$1 + *$2);
-          cout << *$$ << " -> term" << endl;
+        { $$ = new print_node($2);
+          //cout << *$$ << " -> term" << endl;
         }
       | ID LPAREN arglist RPAREN  /* function call */
        { $$ = new function_node(*$1, $2);
