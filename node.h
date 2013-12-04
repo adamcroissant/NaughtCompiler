@@ -185,6 +185,9 @@ class IntLiteral_node : public AST_node {
  IntLiteral_node(int i) : AST_node() {
     literal = i;
   }
+  virtual string generate_code() {
+    return literal.to_string();
+  }
 };
 
 class stringliteral_node : public AST_node {
