@@ -183,8 +183,12 @@ class IntLiteral_node : public AST_node {
 
 class stringliteral_node : public AST_node {
  public:
-  const nstring_st literal;
- stringliteral_node(nstring_st str) : literal(str) , AST_node() {
+  nstring_st literal;
+ stringliteral_node(string str) : AST_node() {
+    literal.len = str.length();
+    for (int i = 0; i < str.length(); i ++) {
+      literal.str[i] = str[i];
+    }
   }
 };
 
@@ -208,7 +212,7 @@ class return_node : public AST_node {
   }
 };
 
-class ternary_node : AST_node {
+class ternary_node : public AST_node {
  public:
   AST_node* question;
   

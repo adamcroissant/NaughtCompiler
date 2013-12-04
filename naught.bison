@@ -47,7 +47,7 @@ extern AST_node *AST;
   assign_node*            assign;
   stringliteral_node*     strlit;
   module_node*            module;
-  return_node*            return;
+  return_node*            ret;
   ternary_node*           ternary;
   vardecl_node*           vardecl;
   function_node*          function; 
@@ -342,7 +342,7 @@ expr :
         { $$ = new add_node($1, $3);
         }
       | expr SUB expr
-        { $$ = new sud_node($1, $3);
+        { $$ = new sub_node($1, $3);
         }
       | expr STAR expr
         { $$ = new mult_node($1, $3);
