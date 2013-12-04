@@ -392,7 +392,7 @@ term :
           //cout << *$$ << " -> term" << endl;
         }
       | ID LPAREN arglist RPAREN  /* function call */
-       { $$ = new function_node(*$1, $2);
+       { $$ = new function_node(*$1, $3);
          /*
          $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
          cout << *$$ << " -> term" << endl;
