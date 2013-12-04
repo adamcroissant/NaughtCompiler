@@ -45,6 +45,15 @@ class variable_node : public AST_node {
 class add_node : public AST_node {
   public:
     add_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+
+  virtual string generate_code(ofstream& f) {
+    string temp = "temp_" + to_string(temp_count);
+    temp_count ++;
+    f << temp << " = " << left.generate_code() << " + "
+      << right.generate_code() << ";" << endl;
+    return temp;
+  }
+
 };
 
 class mult_node : public AST_node {
@@ -54,7 +63,7 @@ class mult_node : public AST_node {
   virtual string generate_code(ofstream& f) {
     string temp = "temp_" + to_string(temp_count);
     temp_count ++;
-    f << temp << " + " << left.generate_code() << " * "
+    f << temp << " = " << left.generate_code() << " * "
       << right.generate_code() << ";" << endl;
     return temp;
   }
