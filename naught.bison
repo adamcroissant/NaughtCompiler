@@ -90,10 +90,10 @@ extern AST_node *AST;
  **********************************************************/
 
 %type <module> module
-%type <funcdef> funcdef
+%type <node> funcdef
 %type <block> block
 %type <vardecl> vardecl
-%type <funcdecl> funcdecl
+%type <node> funcdecl
 %type <node> expr
 %type <node> term
 %type <node> stmt
