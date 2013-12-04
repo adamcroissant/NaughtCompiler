@@ -1513,7 +1513,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 121 "naught.bison"
     { AST = new module_node((yyvsp[(2) - (3)].vardecl_list), (yyvsp[(3) - (3)].funcdef_list), (yyvsp[(1) - (3)].funcdecl_list));
-            (yyval.module) = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
     break;
@@ -1523,7 +1523,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 126 "naught.bison"
     { AST = new module_node((yyvsp[(1) - (2)].vardecl_list), (yyvsp[(2) - (2)].funcdef_list), nullptr);
-            (yyval.module) = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
     break;
@@ -1533,7 +1533,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 131 "naught.bison"
     { AST = new module_node(nullptr, (yyvsp[(2) - (2)].funcdef_list), (yyvsp[(1) - (2)].funcdecl_list));
-            (yyval.module) = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
     break;
@@ -1543,7 +1543,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 136 "naught.bison"
     { AST = new module_node(nullptr, (yyvsp[(1) - (1)].funcdef_list), nullptr);
-            (yyval.module) = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
     break;
@@ -1553,7 +1553,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 141 "naught.bison"
     { AST = new module_node((yyvsp[(2) - (2)].vardecl_list), nullptr, (yyvsp[(1) - (2)].funcdecl_list));
-            (yyval.module) = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
     break;
@@ -1563,7 +1563,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 146 "naught.bison"
     { AST = new module_node((yyvsp[(1) - (1)].vardecl_list), nullptr, nullptr);
-            (yyval.module) = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
     break;
@@ -1573,7 +1573,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 151 "naught.bison"
     { AST = new module_node(nullptr, nullptr, (yyvsp[(1) - (1)].funcdecl_list));
-            (yyval.module) = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
     break;
@@ -1583,7 +1583,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 156 "naught.bison"
     { AST = new module_node(nullptr, nullptr, nullptr);
-            (yyval.module) = AST;
+//            $$ = AST;
 //            cout << *$$ << " -> module " << endl;
           }
     break;
@@ -1818,7 +1818,7 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 311 "naught.bison"
-    { (yyval.block) = new block_node(nullptr, (yyvsp[(3) - (3)].string_val));
+    { (yyval.block) = new block_node(nullptr, (yyvsp[(2) - (3)].stmt_list));
           }
     break;
 
