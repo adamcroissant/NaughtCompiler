@@ -42,7 +42,7 @@ module_node::~module_node() {
 // definitions
 
 // funcdef_list_node class
-funcdef_list_node::funcdef_list_node(AST_node* node) {
+funcdef_list_node::funcdef_list_node(AST_node* funcdef) {
   list.push_back(node);
 };
 
@@ -85,7 +85,7 @@ sfuncdef_node::sfuncdef_node(string id, AST_node* paramlist, AST_node* block) {
 };
 
 // funcdecl_list_node class
-funcdecl_list_node::funcdecl_list_node(AST_node* node) {
+funcdecl_list_node::funcdecl_list_node(AST_node* funcdecl) {
   list.push_back(node);
 };
 
@@ -99,7 +99,7 @@ funcdecl_list_node::~funcdecl_list_node() {
 
 // funcdecl_node class
 funcdecl_node::funcdecl_node(string id, AST_node* paramlist) {
-  this->paramlist = paramlist;  
+  this->paramlist = paramlist;
   this->id=id;
 };
 
@@ -112,7 +112,7 @@ sfuncdecl_node::sfuncdecl_node(string id, AST_node* paramlist) {
 // parameters
 
 // paramlist_node class
-paramlist_node::paramlist_node(AST_node* node) {
+paramlist_node::paramlist_node(AST_node* param) {
   list.push_back(node);
 };
 
