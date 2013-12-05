@@ -197,7 +197,6 @@ class vardecl_node : public AST_node {
 // return
 class return_node : public AST_node {
  public:
-  // initializes left to point to the expression to return
   AST_node* ret;
   return_node(AST_node *ret);
   ~return_node();
@@ -301,4 +300,5 @@ class stringliteral_node : public AST_node {
 };
 // -- END TERMS --
 
+#include "node.cc"
 #endif /* NODE_H */
