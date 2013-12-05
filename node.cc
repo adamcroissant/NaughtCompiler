@@ -6,8 +6,10 @@ using namespace std;
 
 
 // -- BASE CLASS --
-string AST_node::generate_code(ofstream& f);
-AST_node::~AST_node();
+string AST_node::generate_code(ofstream& f) {
+  return "";
+}
+AST_node::~AST_node(){}
 // -- END BASE --
 
 // -- MODULE CLASS --
