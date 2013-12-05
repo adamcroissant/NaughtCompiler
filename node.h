@@ -300,5 +300,4 @@ class stringliteral_node : public AST_node {
 };
 // -- END TERMS --
 
-#include "node.cc"
 #endif /* NODE_H */
