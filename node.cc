@@ -4,7 +4,7 @@
 #include "node.h"
 using namespace std;
 
-
+static int temp_count;
 // -- BASE CLASS --
 string AST_node::generate_code(ofstream& f) {
   return "";

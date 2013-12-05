@@ -7,8 +7,6 @@
 #include <fstream>
 using namespace std;
 
-static int temp_count;
-
 // -- BASE CLASS --
 class AST_node {
  public:
