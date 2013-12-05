@@ -75,7 +75,7 @@ class funcdecl_list_node : public AST_node {
  public:
   vector<AST_node*> list;
     
-  funcdecl_list_node(AST_node* node);
+  funcdecl_list_node(AST_node* funcdecl);
 
   ~funcdecl_list_node();
 };
@@ -106,7 +106,7 @@ class paramlist_node : public AST_node {
  public:
   vector<AST_node*> list;
 
-  paramlist_node(AST_node* node);
+  paramlist_node(AST_node* param);
 
   ~paramlist_node();
 };
