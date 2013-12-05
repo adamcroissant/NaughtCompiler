@@ -12,52 +12,25 @@ static int temp_count;
 // -- BASE CLASS --
 class AST_node {
  public:
-  AST_node* left;
-  AST_node* right;
-  virtual string generate_code(ofstream& f){
-    return "";
-  }
-  AST_node() {
-    left = nullptr;
-    right = nullptr;
-  }
-
-  AST_node(AST_node* left, AST_node* right) {
-    this->left = left;
-    this->right = right;
-  }
-
-  virtual ~AST_node() {
-    delete left;
-    delete right;
-  }
+  virtual string generate_code(ofstream &f);
+  
+  virtual ~AST_node();
 };
 // -- END BASE --
 
 // -- MODULE CLASS --
 class module_node : public AST_node {
  public:
+  AST_node* vardecl_list;
+  AST_node* funcdef_list;
   AST_node* funcdecl_list;
-  module_node(AST_node* vardecl_list, AST_node* funcdef_list,
-              AST_node* funcdecl_list) : AST_node(vardecl_list, funcdef_list) {
-    this->funcdecl_list = funcdecl_list;
-  }
-  virtual string generate_code(ofstream& f) {
-    if(funcdecl_list != nullptr) {
-      funcdecl_list->generate_code(f);
-    }
 
-    if(left != nullptr) {
-      left->generate_code(f);
-    }
-    if(right != nullptr) {
-      right->generate_code(f);
-    }
-    return "";
-  }
-  ~module_node() {
-    delete funcdecl_list;
-  }
+  module_node(AST_node* vardecl_list, AST_node* funcdef_list,
+              AST_node* funcdecl_list);
+
+  virtual string generate_code(ofstream& f);
+
+  ~module_node();
 };
 // -- END MODULE --
 
@@ -65,94 +38,77 @@ class module_node : public AST_node {
 // definitions
 class funcdef_list_node : public AST_node {
  public:
- funcdef_list_node(AST_node* node) : AST_node() {
-    list.push_back(node);
-  }
   vector<AST_node*> list;
-  ~funcdef_list_node() {
-    for(size_t i=0; i<list.size(); i++) {
-      delete list[i];
-    }
-  }
 
-  virtual string generate_code(ofstream& f) {
-    for (uint32_t i = 0; i < list.size(); i ++) {
-      list[i]->generate_code(f);
-    }
-    return "";
-  }
+  funcdef_list_node(AST_node* funcdef);  
+
+  virtual string generate_code(ofstream& f);
+
+  ~funcdef_list_node();
 };
 
 class funcdef_node : public AST_node {
   public:
-    funcdef_node(string id, AST_node* paramlist, AST_node* block) : AST_node(paramlist, block) {
-      this->id=id;
-    }   
-    string id;
-    virtual string generate_code(ofstream& f) {
-      f <<"int " << id << "(";
-      if (left != nullptr) {
-        f << left->generate_code(f);
-      }
-      f << ") {" << endl;
-      f << right->generate_code(f) << endl;
-      f << "}" << endl;
-      return "";
-    }
+  AST_node* paramlist;
+  AST_node* block;
+  string id;
+
+  funcdef_node(string id, AST_node* paramlist, AST_node* block);
+
+  virtual string generate_code(ofstream& f);
+
+  ~funcdef_node();
 };
 
 class sfuncdef_node : public AST_node {
  public:
+  AST_node* paramlist;
+  AST_node* block;
   string id;
 
- sfuncdef_node(string id, AST_node* paramlist, AST_node* block) : AST_node(paramlist, block) {
-    this->id = id;
-  }
+  sfuncdef_node(string id, AST_node* paramlist, AST_node* block);
+
+  ~sfuncdef_node();
 };
 
 class funcdecl_list_node : public AST_node {
-  public:
- funcdecl_list_node(AST_node* node) : AST_node() {
-    list.push_back(node);
-  }
+ public:
   vector<AST_node*> list;
-  ~funcdecl_list_node() {
-    for(size_t i=0; i<list.size(); i++) {
-      delete list[i];
-    }
-  }
+    
+  funcdecl_list_node(AST_node* node);
+
+  ~funcdecl_list_node();
 };
 
 // declarations
 class funcdecl_node : public AST_node {
-  public:
-    funcdecl_node(string id, AST_node* paramlist) : AST_node(paramlist, nullptr) {
-      this->id=id;
-    }
-    string id;
+ public:
+  AST_node* paramlist;
+  string id;
+
+  funcdecl_node(string id, AST_node* paramlist);
+
+  ~funcdecl_node();
 };
 
 class sfuncdecl_node : public AST_node {
  public:
+  AST_node* paramlist;
   string id;
 
- sfuncdecl_node(string id, AST_node* paramlist) : AST_node(paramlist, nullptr) {
-    this->id = id;
-  }
+  sfuncdecl_node(string id, AST_node* paramlist);
+
+  ~sfuncdecl_node();
 };
 
 // parameters
 class paramlist_node : public AST_node {
  public:
- paramlist_node(AST_node* node) : AST_node() {
-    list.push_back(node);
-  }
   vector<AST_node*> list;
-  ~paramlist_node() {
-    for(size_t i=0; i<list.size(); i++) {
-      delete list[i];
-    }
-  }
+
+  paramlist_node(AST_node* node);
+
+  ~paramlist_node();
 };
 
 class param_node : public AST_node {
@@ -160,37 +116,28 @@ class param_node : public AST_node {
   string id;
   string type;
 
- param_node(string type, string id) : AST_node() {
-    this->type = type;
-    this->id = id;
-  }
+  param_node(string type, string id);
 };
 
 
 // function calls
 class function_node : public AST_node {
  public:
-  // initializes left to point to the expression to return                 
   string id;
-  AST_node* argument_list; // may need to change this type
+  AST_node* argument_list;
 
- function_node(string id, AST_node* arg_list) : AST_node() {
-    this->id = id;
-    argument_list = arg_list;
-  }
+  function_node(string id, AST_node* arg_list);
+
+  ~function_node();
 };
 
 class arglist_node : public AST_node {
  public:
- arglist_node(AST_node* node) : AST_node() {
-    list.push_back(node);
-  }
   vector<AST_node*> list;
-  ~arglist_node() {
-    for(size_t i=0; i<list.size(); i++) {
-      delete list[i];
-    }
-  }
+
+  arglist_node(AST_node* node);
+
+  ~arglist_node();
 };
 // -- END FUNCTIONS --
 
@@ -198,18 +145,14 @@ class arglist_node : public AST_node {
 // -- CODE BODY CLASSES --
 class block_node : public AST_node {
   public:
-    block_node(AST_node* vdecl_l, AST_node* stmt_l) : AST_node(vdecl_l, stmt_l) {}
+  AST_node* vardecl_list;
+  AST_node* stmt_list;
 
-  virtual string generate_code(ofstream& f) {
-    if (left != nullptr) {
-      left->generate_code(f);
-    }
-    
-    if (right != nullptr) {
-      right->generate_code(f);
-    }
-    return "";
-  }
+  block_node(AST_node* vdecl_l, AST_node* stmt_l);
+
+  virtual string generate_code(ofstream& f);
+
+  ~block_node();
 };
 
 // statements
