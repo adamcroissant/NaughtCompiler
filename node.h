@@ -160,176 +160,120 @@ class stmtlist_node : public AST_node {
   public:
   vector<AST_node*> list;
 
- stmtlist_node(AST_node* node) : AST_node() {
-    list.push_back(node);
-  }
-  virtual string generate_code(ofstream& f) {
-    for(size_t i=0; i<list.size(); i++) {
-      list[i]->generate_code(f);
-    }
-    return "";
-  }
-
-  
-  ~stmtlist_node() {
-    for(size_t i=0; i<list.size(); i++) {
-      delete list[i];
-    }
-  }
+  stmtlist_node(AST_node* node);
+  virtual string generate_code(ofstream& f);
+  ~stmtlist_node();
 
 };
 
 // variable declarations
 class vardecl_list_node : public AST_node {
  public:
- vardecl_list_node(AST_node* node) : AST_node() {
-    list.push_back(node);
-  }
+  vardecl_list_node(AST_node* node);
   vector<AST_node*> list;
-  ~vardecl_list_node() {
-    for(size_t i=0; i<list.size(); i++) {
-      delete list[i];
-    }
-  }
-
-  virtual string generate_code(ofstream& f) {
-    for (size_t i = 0; i < list.size(); i ++) {
-      list[i]->generate_code(f);
-    }
-    return "";
-  }
+  ~vardecl_list_node();
+  virtual string generate_code(ofstream& f);
 };
-
 
 class vardecl_node : public AST_node {
  public:
   string type;
   string id;
   bool isExtern;
-
+  AST_node* assign;
 
   /*vardecl_node(string type, string id) : AST_node() {
     this->type = type;
     this->id = id;
   }*/
 
- vardecl_node(string type, string id, AST_node* assign) : AST_node(assign, nullptr) {
-    this->type = type;
-    this->id = id;
-  }
+  vardecl_node(string type, string id, AST_node* assign);
 
- vardecl_node(string type, string id, bool e = false) : AST_node() {
-    isExtern = e;
-    this->type = type;
-    this->id = id;
-  }
-
-  virtual string generate_code(ofstream& f) {
-    if (left == nullptr) {
-      f << type << " " << id << ";" << endl;
-    } else {
-      f << type << " " << id << " = " << left->generate_code(f) << ";" << endl;
-    }
-    return "";
-  }
+  vardecl_node(string type, string id, bool e = false);
+  ~vardecl_node();
+  virtual string generate_code(ofstream& f);
 };
 
 // return
 class return_node : public AST_node {
  public:
   // initializes left to point to the expression to return
- return_node(AST_node *n1, AST_node *n2) : AST_node(n1, n2) {
-  }
+  AST_node* ret;
+  return_node(AST_node *ret);
+  ~return_node();
 
-  virtual string generate_code(ofstream& f) {
-    f << "return " << left->generate_code(f) << ";";
-    return "";
-  }
-
+  virtual string generate_code(ofstream& f);
 };
 // -- END CODE BODY --
 
 // -- OPERATORS --
 // ternary
 class ternary_node : public AST_node {
- public:
-  AST_node* question;
+  public:
+    AST_node* question;
+    AST_node* left;
+    AST_node* right;
+
+    ~ternary_node();
+    ternary_node(AST_node* question, AST_node* left, AST_node* right);
   
- ternary_node(AST_node* question, AST_node* left, AST_node* right) :
-  AST_node(left, right) {
-    this->question = question;
-  }
-  
-  ~ternary_node() {
-    delete question;
-  }
 };
 
 // binary
 class add_node : public AST_node {
   public:
-    add_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+    AST_node* left;
+    AST_node* right;
 
-  virtual string generate_code(ofstream& f) {
-    string temp = "temp_" + to_string(temp_count);
-
-    temp_count ++;
-    f << "int " << temp << " = " << left->generate_code(f) << " + "
-      << right->generate_code(f) << ";" << endl;
-    return temp;
-  }
-
+    add_node(AST_node* left, AST_node* right);
+    ~add_node();
+    virtual string generate_code(ofstream& f);
 };
 
 class mult_node : public AST_node {
   public:
-    mult_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+    AST_node* left;
+    AST_node* right;
 
-  virtual string generate_code(ofstream& f) {
-    string temp = "temp_" + to_string(temp_count);
-
-    temp_count ++;
-    f << "int " << temp << " = " << left->generate_code(f) << " * "
-      << right->generate_code(f) << ";" << endl;
-    return temp;
-  }
+    mult_node(AST_node* left, AST_node* right);
+    ~mult_node();
+    virtual string generate_code(ofstream& f);
 };
 
 class sub_node : public AST_node {
   public:
-    sub_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+    AST_node* left;
+    AST_node* right;
 
-  virtual string generate_code(ofstream& f) {
-    string temp = "temp_" + to_string(temp_count);
-    temp_count ++;
-    f << "int " << temp << " = " << left->generate_code(f) << " - "
-      << right->generate_code(f) << ";" << endl;
-    return temp;
-  }
+    sub_node(AST_node* left, AST_node* right);
+    ~sub_node();
+    virtual string generate_code(ofstream& f);
 };
 
 class div_node : public AST_node {
   public:
-    div_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+    AST_node* left;
+    AST_node* right;
 
-  virtual string generate_code(ofstream& f) {
-    string temp = "temp_" + to_string(temp_count);
-    temp_count ++;
-    f << "int " << temp << " = " << left->generate_code(f) << " / "
-      << right->generate_code(f) << ";" << endl;
-    return temp;
-  }
+    div_node(AST_node* left, AST_node* right);
+    ~div_node();
+    virtual string generate_code(ofstream& f);
 };
 
 class assign_node : public AST_node {
  public:
- assign_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+  AST_node* left;
+  AST_node* right;
+  assign_node(AST_node* left, AST_node* right);
+  ~assign_node();
 };
 
 // unary
 class print_node : public AST_node {
   public:
-    print_node(AST_node* term) : AST_node(term, nullptr) {}
+    AST_node* term;
+    print_node(AST_node* term);
+    ~print_node();
 };
 // -- END OPERATORS --
 
@@ -337,37 +281,23 @@ class print_node : public AST_node {
 // -- TERMS (VARS/LITS) --
 class variable_node : public AST_node {
   public:
-    variable_node(string s) : AST_node() { 
-      var_name=s;
-    }
+    variable_node(string s);
 
     string var_name;
-
-    virtual string generate_code(ofstream& f) {
-      return var_name;
-    }
+    virtual string generate_code(ofstream& f);
 };
 
 class IntLiteral_node : public AST_node {
  public:
   int literal;
- IntLiteral_node(int i) : AST_node() {
-    literal = i;
-  }
-  virtual string generate_code(ofstream& f) {
-    return to_string(literal);
-  }
+  IntLiteral_node(int i);
+  virtual string generate_code(ofstream& f);
 };
 
 class stringliteral_node : public AST_node {
  public:
   nstring_st literal;
- stringliteral_node(string str) : AST_node() {
-    literal.len = str.length();
-    for (size_t i = 0; i < str.length(); i ++) {
-      literal.str[i] = str[i];
-    }
-  }
+  stringliteral_node(string str);
 };
 // -- END TERMS --
 
