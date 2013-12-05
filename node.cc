@@ -206,7 +206,7 @@ virtual string vardecl_list_node::generate_code(ofstream& f) {
 
 // vardecl_node class
 vardecl_node::vardecl_node(string type, string id, AST_node* assign) {
-  this->assign - assign;
+  this->assign = assign;
   this->type = type;
   this->id = id;
 }
@@ -226,14 +226,22 @@ virtual string vardecl_node::generate_code(ofstream& f) {
   return "";
 }
 
+vardecl_node::~vardecl_node() {
+  delete assign;
+}
+
 // return_node class
-return_node::return_node() {
+return_node::return_node(AST_node* ret) {
   this->ret = ret;
 }
 
 virtual string return_node::generate_code(ofstream& f) {
   f << "return " << left->generate_code(f) << ";";
   return "";
+}
+
+return_node::~return_node() {
+  delete ret;
 }
 
 // -- END CODE BODY --
@@ -248,6 +256,8 @@ ternary_node::ternary_node(AST_node* question, AST_node* left, AST_node* right) 
   
 ternary_node::~ternary_node() {
   delete question;
+  delete left;
+  delete right;
 }
 
 // binary
@@ -263,6 +273,11 @@ virtual string add_node::generate_code(ofstream& f) {
   f << "int " << temp << " = " << left->generate_code(f) << " + "
     << right->generate_code(f) << ";" << endl;
   return temp;
+}
+
+add_node::~add_node() {
+  delete left;
+  delete right;
 }
 
 
@@ -281,6 +296,11 @@ virtual string mult_node::generate_code(ofstream& f) {
   return temp;
 }
 
+mult_node::~mult_node() {
+  delete left;
+  delete right;
+}
+
 // sub_node class
 sub_node::sub_node(AST_node* left, AST_node* right) {
   this->left = left;
@@ -293,6 +313,11 @@ virtual string sub_node::generate_code(ofstream& f) {
   f << "int " << temp << " = " << left->generate_code(f) << " - "
     << right->generate_code(f) << ";" << endl;
   return temp;
+}
+
+sub_node::~sub_node() {
+  delete left;
+  delete right;
 }
 
 // div_node class
@@ -309,16 +334,30 @@ virtual string div_node::generate_code(ofstream& f) {
   return temp;
 }
 
+div_node::~div_node() {
+  delete left;
+  delete right;
+}
+
 // assign_node class
 assign_node::assign_node(AST_node* left, AST_node* right) {
   this->left = left;
   this->right = right;
 }
 
+assign_node::~assign_node() {
+  delete left;
+  delete right;
+}
+
 // unary ops
 // print_node class
 print_node::print_node(AST_node* term) {
   this->term = term;
+}
+
+print_node::~print_node() {
+  delete term;
 }
 // -- END OPERATORS --
 
