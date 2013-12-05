@@ -16,7 +16,7 @@ module_node::module_node(AST_node* vardecl_list, AST_node* funcdef_list,
     this->vardecl_list = vardecl_list;
     this->funcdef_list = funcdef_list;
     this->funcdecl_list = funcdecl_list;
-};
+}
 virtual string module_node::generate_code(ofstream& f) {
   if(funcdecl_list != nullptr) {
     funcdecl_list->generate_code(f);
@@ -29,10 +29,12 @@ virtual string module_node::generate_code(ofstream& f) {
     right->generate_code(f);
   }
   return "";
-};
+}
 module_node::~module_node() {
     delete funcdecl_list;
-};
+    delete funcdef_list;
+    delete vardecl_list;
+}
 // -- END MODULE --
 
 // -- FUNCTION NODES --
@@ -41,20 +43,20 @@ module_node::~module_node() {
 // funcdef_list_node class
 funcdef_list_node::funcdef_list_node(AST_node* funcdef) {
   list.push_back(node);
-};
+}
 
 funcdef_list_node::~funcdef_list_node() {
   for(size_t i=0; i<list.size(); i++) {
     delete list[i];
   }
-};
+}
 
 virtual string funcdef_list_node::generate_code(ofstream& f) {
   for (uint32_t i = 0; i < list.size(); i ++) {
     list[i]->generate_code(f);
   }
   return "";
-};
+}
 
 // funcdef_node class
 funcdef_node::funcdef_node(string id, AST_node* paramlist, AST_node* block) {
@@ -72,25 +74,35 @@ virtual string funcdef_node::generate_code(ofstream& f) {
   f << right->generate_code(f) << endl;
   f << "}" << endl;
   return "";
-};
+}
+
+funcdef_node::~funcdef_node(){
+  delete paramlist;
+  delete block;
+}
 
 // sfuncdef_node class
 sfuncdef_node::sfuncdef_node(string id, AST_node* paramlist, AST_node* block) {
    this->paramlist = paramlist;
    this->block = block;
    this->id = id;
-};
+}
+
+sfuncdef_node::~sfuncdef_node(){
+  delete paramlist;
+  delete block;
+}
 
 // funcdecl_list_node class
 funcdecl_list_node::funcdecl_list_node(AST_node* funcdecl) {
   list.push_back(node);
-};
+}
 
 funcdecl_list_node::~funcdecl_list_node() {
   for(size_t i=0; i<list.size(); i++) {
     delete list[i];
   }
-};
+}
 
 // declarations
 
@@ -98,32 +110,41 @@ funcdecl_list_node::~funcdecl_list_node() {
 funcdecl_node::funcdecl_node(string id, AST_node* paramlist) {
   this->paramlist = paramlist;
   this->id=id;
-};
+}
+
+funcdecl_node::~funcdecl_node(){
+  delete paramlist;
+}
 
 // sfuncdecl_node class
 sfuncdecl_node::sfuncdecl_node(string id, AST_node* paramlist) {
   this->paramlist = paramlist; 
   this->id = id;
-};
+}
+
+
+sfuncdecl_node::~sfuncdecl_node(){
+  delete paramlist;
+}
 
 // parameters
 
 // paramlist_node class
 paramlist_node::paramlist_node(AST_node* param) {
   list.push_back(node);
-};
+}
 
 paramlist_node::~paramlist_node() {
   for(size_t i=0; i<list.size(); i++) {
     delete list[i];
   }
-};
+}
 
 // param_node class
 param_node::param_node(string type, string id) {
     this->type = type;
     this->id = id;
-};
+}
 
 
 // function calls
@@ -132,7 +153,12 @@ param_node::param_node(string type, string id) {
 function_node::function_node(string id, AST_node* arg_list) {
   this->id = id;
   argument_list = arg_list;
-};
+}
+
+
+function_node::~function_node(){
+  delete arg_list;
+}
 
 // arglist_node class
 arglist_node::arglist_node(AST_node* node) {
@@ -163,6 +189,11 @@ virtual string block_node::generate_code(ofstream& f) {
     right->generate_code(f);
   }
   return "";
+}
+
+block_node::~block_node(){
+  delete vdecl_l;
+  delete stmt_l;
 }
 
 // statements
