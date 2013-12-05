@@ -1,6 +1,7 @@
 %{
 #define YY_NO_UNPUT
 
+#include "node.h"
 #include <iostream>
 #include <string>
 #include <memory>
@@ -8,7 +9,6 @@
 
 #include "yy.h"
 #include "StrUtil.h"
-#include "node.h"
 
 using namespace std;
 
