@@ -24,11 +24,11 @@ string module_node::generate_code(ofstream& f) {
     funcdecl_list->generate_code(f);
   }
   
-  if(left != nullptr) {
-    left->generate_code(f);
+  if(vardecl_list != nullptr) {
+    vardecl_list->generate_code(f);
   }
-  if(right != nullptr) {
-    right->generate_code(f);
+  if(funcdef_list != nullptr) {
+    funcdef_list->generate_code(f);
   }
   return "";
 }
@@ -44,7 +44,7 @@ module_node::~module_node() {
 
 // funcdef_list_node class
 funcdef_list_node::funcdef_list_node(AST_node* funcdef) {
-  list.push_back(node);
+  list.push_back(funcdef);
 }
 
 funcdef_list_node::~funcdef_list_node() {
@@ -69,11 +69,11 @@ funcdef_node::funcdef_node(string id, AST_node* paramlist, AST_node* block) {
 
 string funcdef_node::generate_code(ofstream& f) {
   f <<"int " << id << "(";
-  if (left != nullptr) {
-    f << left->generate_code(f);
+  if (paramlist != nullptr) {
+    f << paramlist->generate_code(f);
   }
   f << ") {" << endl;
-  f << right->generate_code(f) << endl;
+  f << block->generate_code(f) << endl;
   f << "}" << endl;
   return "";
 }
@@ -97,7 +97,7 @@ sfuncdef_node::~sfuncdef_node(){
 
 // funcdecl_list_node class
 funcdecl_list_node::funcdecl_list_node(AST_node* funcdecl) {
-  list.push_back(node);
+  list.push_back(funcdecl);
 }
 
 funcdecl_list_node::~funcdecl_list_node() {
@@ -133,7 +133,7 @@ sfuncdecl_node::~sfuncdecl_node(){
 
 // paramlist_node class
 paramlist_node::paramlist_node(AST_node* param) {
-  list.push_back(node);
+  list.push_back(param);
 }
 
 paramlist_node::~paramlist_node() {
@@ -159,7 +159,7 @@ function_node::function_node(string id, AST_node* arg_list) {
 
 
 function_node::~function_node(){
-  delete arg_list;
+  delete argument_list;
 }
 
 // arglist_node class
@@ -177,25 +177,25 @@ arglist_node::~arglist_node() {
 // -- CODE BODY CLASSES --
 
 // block_node class
-block_node::block_node(AST_node* vdecl_l, AST_node* stmt_l) : AST_node(vdecl_l, stmt_l) {
-  this->vdecl_l = vdecl_l;
-  this->stmt_l = stmt_l;
+block_node::block_node(AST_node* vdecl_l, AST_node* stmt_l) {
+  this->vardecl_list = vdecl_l;
+  this->stmt_list = stmt_l;
 }
 
 string block_node::generate_code(ofstream& f) {
-  if (left != nullptr) {
-    left->generate_code(f);
+  if (vardecl_list != nullptr) {
+    vardecl_list->generate_code(f);
   }
   
-  if (right != nullptr) {
-    right->generate_code(f);
+  if (stmt_list != nullptr) {
+    stmt_list->generate_code(f);
   }
   return "";
 }
 
 block_node::~block_node(){
-  delete vdecl_l;
-  delete stmt_l;
+  delete vardecl_list;
+  delete stmt_list;
 }
 
 // statements
@@ -244,17 +244,17 @@ vardecl_node::vardecl_node(string type, string id, AST_node* assign) {
   this->id = id;
 }
 
-vardecl_node::vardecl_node(string type, string id, bool e = false) {
+vardecl_node::vardecl_node(string type, string id, bool e) {
     isExtern = e;
     this->type = type;
     this->id = id;
 }
 
 string vardecl_node::generate_code(ofstream& f) {
-  if (left == nullptr) {
+  if (assign == nullptr) {
     f << type << " " << id << ";" << endl;
   } else {
-    f << type << " " << id << " = " << left->generate_code(f) << ";" << endl;
+    f << type << " " << id << " = " << assign->generate_code(f) << ";" << endl;
   }
   return "";
 }
@@ -269,7 +269,7 @@ return_node::return_node(AST_node* ret) {
 }
 
 string return_node::generate_code(ofstream& f) {
-  f << "return " << left->generate_code(f) << ";";
+  f << "return " << ret->generate_code(f) << ";";
   return "";
 }
 
