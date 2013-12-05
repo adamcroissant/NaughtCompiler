@@ -295,94 +295,89 @@ class add_node : public AST_node {
 
 };
 
-class mult_node : public AST_node {
-  public:
-    mult_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+// mult_node class
+mult_node::mult_node(AST_node* left, AST_node* right) {
+  this->left = left;
+  this->right = right;
+}
 
-  virtual string generate_code(ofstream& f) {
-    string temp = "temp_" + to_string(temp_count);
+virtual string mult_node::generate_code(ofstream& f) {
+  string temp = "temp_" + to_string(temp_count);
+  
+  temp_count ++;
+  f << "int " << temp << " = " << left->generate_code(f) << " * "
+    << right->generate_code(f) << ";" << endl;
+  return temp;
+}
 
-    temp_count ++;
-    f << "int " << temp << " = " << left->generate_code(f) << " * "
-      << right->generate_code(f) << ";" << endl;
-    return temp;
-  }
-};
+// sub_node class
+sub_node::sub_node(AST_node* left, AST_node* right) {
+  this->left = left;
+  this->right = right;
+}
 
-class sub_node : public AST_node {
-  public:
-    sub_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+virtual string sub_node::generate_code(ofstream& f) {
+  string temp = "temp_" + to_string(temp_count);
+  temp_count ++;
+  f << "int " << temp << " = " << left->generate_code(f) << " - "
+    << right->generate_code(f) << ";" << endl;
+  return temp;
+}
 
-  virtual string generate_code(ofstream& f) {
-    string temp = "temp_" + to_string(temp_count);
-    temp_count ++;
-    f << "int " << temp << " = " << left->generate_code(f) << " - "
-      << right->generate_code(f) << ";" << endl;
-    return temp;
-  }
-};
+// div_node class
+div_node::div_node(AST_node* left, AST_node* right) {
+  this->left = left;
+  this->right = right;
+}
 
-class div_node : public AST_node {
-  public:
-    div_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+virtual string div_node::generate_code(ofstream& f) {
+  string temp = "temp_" + to_string(temp_count);
+  temp_count ++;
+  f << "int " << temp << " = " << left->generate_code(f) << " / "
+    << right->generate_code(f) << ";" << endl;
+  return temp;
+}
 
-  virtual string generate_code(ofstream& f) {
-    string temp = "temp_" + to_string(temp_count);
-    temp_count ++;
-    f << "int " << temp << " = " << left->generate_code(f) << " / "
-      << right->generate_code(f) << ";" << endl;
-    return temp;
-  }
-};
+// assign_node class
+assign_node::assign_node(AST_node* left, AST_node* right) {
+  this->left = left;
+  this->right = right;
+}
 
-class assign_node : public AST_node {
- public:
- assign_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
-};
-
-// unary
-class print_node : public AST_node {
-  public:
-    print_node(AST_node* term) : AST_node(term, nullptr) {}
-};
+// unary ops
+// print_node class
+print_node::print_node(AST_node* term) {
+  this->term = term;
+}
 // -- END OPERATORS --
 
 
 // -- TERMS (VARS/LITS) --
-class variable_node : public AST_node {
-  public:
-    variable_node(string s) : AST_node() { 
-      var_name=s;
-    }
 
-    string var_name;
+// variable node class
+variable_node::variable_node(string s) { 
+  var_name=s;
+}
 
-    virtual string generate_code(ofstream& f) {
-      return var_name;
-    }
-};
+virtual string variable_node::generate_code(ofstream& f) {
+  return var_name;
+}
 
-class IntLiteral_node : public AST_node {
- public:
-  int literal;
- IntLiteral_node(int i) : AST_node() {
-    literal = i;
+// intliteral_node class
+IntLiteral_node::IntLiteral_node(int i) {
+  literal = i;
+}
+virtual string IntLiteral_node::generate_code(ofstream& f) {
+  return to_string(literal);
+}
+
+// stringliteral_node class
+stringliteral_node::stringliteral_node(string str) {
+  literal.len = str.length();
+  for (size_t i = 0; i < str.length(); i ++) {
+    literal.str[i] = str[i];
   }
-  virtual string generate_code(ofstream& f) {
-    return to_string(literal);
-  }
-};
-
-class stringliteral_node : public AST_node {
- public:
-  nstring_st literal;
- stringliteral_node(string str) : AST_node() {
-    literal.len = str.length();
-    for (size_t i = 0; i < str.length(); i ++) {
-      literal.str[i] = str[i];
-    }
-  }
-};
+}
 // -- END TERMS --
 
 #endif /* NODE_H */
