@@ -337,7 +337,7 @@ stmt :
           { $$ = $1;
           }
        | RETURN expr SEMI
-          { $$ = new return_node($2, nullptr);
+          { $$ = new return_node($2);
           }
      ;
 
