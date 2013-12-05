@@ -6,11 +6,8 @@ using namespace std;
 
 
 // -- BASE CLASS --
-virtual string AST_node::generate_code(ofstream& f){
-  return "";
-};
-
-virtual AST_node::~AST_node() { };
+virtual string AST_node::generate_code(ofstream& f);
+virtual AST_node::~AST_node();
 // -- END BASE --
 
 // -- MODULE CLASS --
@@ -137,163 +134,137 @@ function_node::function_node(string id, AST_node* arg_list) {
   argument_list = arg_list;
 };
 
-class arglist_node : public AST_node {
- public:
- arglist_node(AST_node* node) : AST_node() {
-    list.push_back(node);
+// arglist_node class
+arglist_node::arglist_node(AST_node* node) {
+  list.push_back(node);
+}
+arglist_node::~arglist_node() {
+  for(size_t i=0; i<list.size(); i++) {
+    delete list[i];
   }
-  vector<AST_node*> list;
-  ~arglist_node() {
-    for(size_t i=0; i<list.size(); i++) {
-      delete list[i];
-    }
-  }
-};
+}
 // -- END FUNCTIONS --
 
 
 // -- CODE BODY CLASSES --
-class block_node : public AST_node {
-  public:
-    block_node(AST_node* vdecl_l, AST_node* stmt_l) : AST_node(vdecl_l, stmt_l) {}
 
-  virtual string generate_code(ofstream& f) {
-    if (left != nullptr) {
-      left->generate_code(f);
-    }
-    
-    if (right != nullptr) {
-      right->generate_code(f);
-    }
-    return "";
+// block_node class
+block_node::block_node(AST_node* vdecl_l, AST_node* stmt_l) : AST_node(vdecl_l, stmt_l) {
+  this->vdecl_l = vdecl_l;
+  this->stmt_l = stmt_l;
+}
+
+virtual string block_node::generate_code(ofstream& f) {
+  if (left != nullptr) {
+    left->generate_code(f);
   }
-};
+  
+  if (right != nullptr) {
+    right->generate_code(f);
+  }
+  return "";
+}
 
 // statements
-class stmtlist_node : public AST_node {
-  public:
-  vector<AST_node*> list;
 
- stmtlist_node(AST_node* node) : AST_node() {
-    list.push_back(node);
-  }
-  virtual string generate_code(ofstream& f) {
-    for(size_t i=0; i<list.size(); i++) {
-      list[i]->generate_code(f);
-    }
-    return "";
-  }
+// stmtlist_node class
+stmtlist_node::stmtlist_node(AST_node* node) : AST_node() {
+  list.push_back(node);
+}
 
+virtual string stmtlist_node::generate_code(ofstream& f) {
+  for(size_t i=0; i<list.size(); i++) {
+    list[i]->generate_code(f);
+  }
+  return "";
+}
   
-  ~stmtlist_node() {
-    for(size_t i=0; i<list.size(); i++) {
-      delete list[i];
-    }
+stmtlist_node::~stmtlist_node() {
+  for(size_t i=0; i<list.size(); i++) {
+    delete list[i];
   }
-
-};
+}
 
 // variable declarations
-class vardecl_list_node : public AST_node {
- public:
- vardecl_list_node(AST_node* node) : AST_node() {
-    list.push_back(node);
+
+// vardecl_list_node class
+vardecl_list_node::vardecl_list_node(AST_node* node) {
+  list.push_back(node);
+}
+vardecl_list_node::~vardecl_list_node() {
+  for(size_t i=0; i<list.size(); i++) {
+    delete list[i];
   }
-  vector<AST_node*> list;
-  ~vardecl_list_node() {
-    for(size_t i=0; i<list.size(); i++) {
-      delete list[i];
-    }
+}
+
+virtual string vardecl_list_node::generate_code(ofstream& f) {
+  for (size_t i = 0; i < list.size(); i ++) {
+    list[i]->generate_code(f);
   }
+  return "";
+}
 
-  virtual string generate_code(ofstream& f) {
-    for (size_t i = 0; i < list.size(); i ++) {
-      list[i]->generate_code(f);
-    }
-    return "";
-  }
-};
+// vardecl_node class
+vardecl_node::vardecl_node(string type, string id, AST_node* assign) {
+  this->assign - assign;
+  this->type = type;
+  this->id = id;
+}
 
-
-class vardecl_node : public AST_node {
- public:
-  string type;
-  string id;
-  bool isExtern;
-
-
-  /*vardecl_node(string type, string id) : AST_node() {
-    this->type = type;
-    this->id = id;
-  }*/
-
- vardecl_node(string type, string id, AST_node* assign) : AST_node(assign, nullptr) {
-    this->type = type;
-    this->id = id;
-  }
-
- vardecl_node(string type, string id, bool e = false) : AST_node() {
+vardecl_node::vardecl_node(string type, string id, bool e = false) {
     isExtern = e;
     this->type = type;
     this->id = id;
-  }
+}
 
-  virtual string generate_code(ofstream& f) {
-    if (left == nullptr) {
-      f << type << " " << id << ";" << endl;
-    } else {
-      f << type << " " << id << " = " << left->generate_code(f) << ";" << endl;
-    }
-    return "";
+virtual string vardecl_node::generate_code(ofstream& f) {
+  if (left == nullptr) {
+    f << type << " " << id << ";" << endl;
+  } else {
+    f << type << " " << id << " = " << left->generate_code(f) << ";" << endl;
   }
-};
+  return "";
+}
 
-// return
-class return_node : public AST_node {
- public:
-  // initializes left to point to the expression to return
- return_node(AST_node *n1, AST_node *n2) : AST_node(n1, n2) {
-  }
+// return_node class
+return_node::return_node() {
+  this->ret = ret;
+}
 
-  virtual string generate_code(ofstream& f) {
-    f << "return " << left->generate_code(f) << ";";
-    return "";
-  }
+virtual string return_node::generate_code(ofstream& f) {
+  f << "return " << left->generate_code(f) << ";";
+  return "";
+}
 
-};
 // -- END CODE BODY --
 
 // -- OPERATORS --
 // ternary
-class ternary_node : public AST_node {
- public:
-  AST_node* question;
+ternary_node::ternary_node(AST_node* question, AST_node* left, AST_node* right) {
+  this->question = question;
+  this->left = left;
+  this->right = right;
+}
   
- ternary_node(AST_node* question, AST_node* left, AST_node* right) :
-  AST_node(left, right) {
-    this->question = question;
-  }
-  
-  ~ternary_node() {
-    delete question;
-  }
-};
+ternary_node::~ternary_node() {
+  delete question;
+}
 
 // binary
-class add_node : public AST_node {
-  public:
-    add_node(AST_node* left, AST_node* right) : AST_node(left, right) {}
+add_node::add_node(AST_node* left, AST_node* right) {
+  this->left = left;
+  this->right = right;
+}
 
-  virtual string generate_code(ofstream& f) {
-    string temp = "temp_" + to_string(temp_count);
+virtual string add_node::generate_code(ofstream& f) {
+  string temp = "temp_" + to_string(temp_count);
+  
+  temp_count ++;
+  f << "int " << temp << " = " << left->generate_code(f) << " + "
+    << right->generate_code(f) << ";" << endl;
+  return temp;
+}
 
-    temp_count ++;
-    f << "int " << temp << " = " << left->generate_code(f) << " + "
-      << right->generate_code(f) << ";" << endl;
-    return temp;
-  }
-
-};
 
 class mult_node : public AST_node {
   public:
