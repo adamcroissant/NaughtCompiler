@@ -476,7 +476,40 @@ print_node::print_node(expr_node* term) {
 print_node::~print_node() {
   delete term;
 }
-// -- END OPERATORS --
+
+address_node::address_node(expr_node* ptr) {
+  this->ptr=ptr;
+}
+
+address_node::~address_node() {
+  delete ptr;
+}
+
+void address_node::generate_code(ofstream& f) {
+  ptr->generate_code(f);
+  string temp = "temp_" + to_string(temp_count);
+  temp_count++;
+  f<<"int* " <<temp<<" = " <<"&" << ptr->id<<";"<<endl;
+  id=temp;
+
+}
+
+void dereference_node::generate_code(ofstream& f) {
+  ptr->generate_code(f);
+  string temp = "temp_" + to_string(temp_count);
+  temp_count++;  
+  f<<"int " <<temp<<" = " <<"*" << ptr->id<<";"<<endl; 
+  id=temp;
+}
+
+dereference_node::dereference_node(expr_node* ptr) {
+  this->ptr=ptr;
+}
+
+dereference_node::~dereference_node() {
+  delete ptr;
+}
+//-- END OPERATORS --
 
 
 // -- TERMS (VARS/LITS) --

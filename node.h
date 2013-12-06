@@ -308,6 +308,22 @@ class print_node : public expr_node {
     print_node(expr_node* term);
     ~print_node();
 };
+
+class address_node : public expr_node {
+  public:
+    expr_node* ptr;
+    address_node(expr_node* ptr);
+    virtual void generate_code(ofstream& f);
+    ~address_node();
+};
+
+class dereference_node : public expr_node {
+  public:
+    expr_node* ptr;
+    dereference_node(expr_node* ptr);
+    virtual void generate_code(ofstream& f);
+    ~dereference_node();
+};
 // -- END OPERATORS --
 
 
