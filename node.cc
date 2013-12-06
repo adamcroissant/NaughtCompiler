@@ -335,7 +335,7 @@ void ternary_node::generate_code(ofstream& f) {
   }
 
   id = "temp_" + to_string(temp_count);
-  f << id << ";" << endl;
+  f << type << " " << id << ";" << endl;
   f << "if (" << question->id << ") {" << endl;
   f << id << " = " << left->id << ";" << endl;
   f << "} else {" << endl;
