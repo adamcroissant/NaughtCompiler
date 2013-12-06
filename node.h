@@ -249,7 +249,8 @@ class ternary_node : public expr_node {
 
     ~ternary_node();
     ternary_node(expr_node* question, expr_node* left, expr_node* right);
-  
+
+    virtual void generate_code(ofstream& f);
 };
 
 // binary
