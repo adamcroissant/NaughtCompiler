@@ -300,6 +300,22 @@ ternary_node::~ternary_node() {
   delete right;
 }
 
+void ternary_node::generate_code(ofstream& f) {
+  question->generate_code(f);
+  left->generate_code(f);
+  right->generate_code(f);
+
+  id = "temp_" + to_string(temp_count);
+
+  f << "if (" << question->id << ") {" << endl;
+  f << id << " = " << left->id << ";" << endl;
+  f << "} else {" << endl;
+  f << id << " = " << right->id << ";" << endl;
+  f << "}" << endl;
+
+  temp_count ++;
+}
+
 // binary
 add_node::add_node(expr_node* left, expr_node* right) {
   this->left = left;
