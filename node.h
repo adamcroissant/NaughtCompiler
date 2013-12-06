@@ -154,10 +154,10 @@ class expr_node : public AST_node {
 // function calls
 class function_node : public expr_node {
  public:
-  AST_node* argument_list;
+  arglist_node* argument_list;
 
-  function_node(string id, AST_node* arg_list);
-
+  function_node(string id, arglist_node* arg_list);
+  virtual void generate_code(ofstream& f);
   ~function_node();
 };
 
@@ -166,7 +166,7 @@ class arglist_node : public AST_node {
   vector<expr_node*> list;
 
   arglist_node(expr_node* node);
-
+  virtual void generate_code(ofstream& f);
   ~arglist_node();
 };
 // -- END FUNCTIONS --
