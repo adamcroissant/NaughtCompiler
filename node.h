@@ -300,6 +300,8 @@ class assign_node : public expr_node {
   expr_node* right;
   assign_node(expr_node* left, expr_node* right);
   ~assign_node();
+
+  virtual void generate_code(ofstream& f);
 };
 
 // unary
