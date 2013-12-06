@@ -143,6 +143,12 @@ class param_node : public AST_node {
   param_node(string type, string id);
 };
 
+// -- EXPRESSION NODE --
+class expr_node : public AST_node {
+  string id;
+  string type;
+};
+// -- END EXPR NODE --
 
 // function calls
 class function_node : public expr_node {
@@ -227,13 +233,6 @@ class return_node : public AST_node {
   virtual void generate_code(ofstream& f);
 };
 // -- END CODE BODY --
-
-// -- EXPRESSION NODE --
-class expr_node : public AST_node {
-  string id;
-  string type;
-}
-// -- END EXPR NODE --
 
 // -- OPERATORS --
 // ternary
