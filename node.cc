@@ -445,6 +445,22 @@ assign_node::~assign_node() {
   delete right;
 }
 
+assign_node::generate_code(ofstream &f){
+  left->generate_code(f);
+  right->generate_code(f);
+
+  if (left.type.compare(right.compare) != 0){
+    cerr << "Improper Assign: assigning a " << right.type 
+	 << " to a " << left.type << endl;
+    exit(1);
+  }
+  
+  type = left->type;
+  id = left->id;
+
+  f << left.id << " = " << right.id << endl;
+    
+}
 // unary ops
 // print_node class
 print_node::print_node(expr_node* term) {
