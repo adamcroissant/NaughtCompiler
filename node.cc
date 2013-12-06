@@ -162,7 +162,7 @@ void param_node::generate_code(ofstream& f) {
 // function calls
 
 // function_node class
-function_node::function_node(string id, AST_node* arg_list) {
+function_node::function_node(string id, arglist_node* arg_list) {
   this->id = id;
   argument_list = arg_list;
 }
@@ -170,6 +170,21 @@ function_node::function_node(string id, AST_node* arg_list) {
 
 function_node::~function_node(){
   delete argument_list;
+}
+
+void function_node::generate_code(ofstream& f) {
+  if(argument_list) {
+    
+    argument_list->generate_code(f);
+    f<<id<<"(";
+    f<<argument_list->list[0]->id;
+    for(size_t i=1; i<argument_list->list.size(); i++) {  
+      f<<", "<<argument_list->list[i]->id;
+    }
+  }else {
+    f<<id<<"("; 
+  }
+  f<<")"<<endl;
 }
 
 // arglist_node class
@@ -180,6 +195,13 @@ arglist_node::~arglist_node() {
   for(size_t i=0; i<list.size(); i++) {
     delete list[i];
   }
+}
+
+void arglist_node::generate_code(ofstream& f) {
+  for(size_t i=0; i<list.size(); i++) {
+    list[i]->generate_code(f);
+  }
+
 }
 // -- END FUNCTIONS --
 
