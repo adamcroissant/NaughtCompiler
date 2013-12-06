@@ -13,6 +13,16 @@ static int temp_count;
 static map<string, pair<string, bool>> global_table;
 static map<string, pair<string, bool>> local_table;
 
+static string ntype_to_ctype(string ntype) {
+  if (ntype.compare("int") == 0) return "int32_t";
+
+  if (ntype.compare("pointer") == 0) return "int32_t*";
+
+  // will need to change this one later when we actually have
+  // nstring_st allocation/generation working properly
+  if (ntype.compare("string") == 0) return "string";
+}
+
 
 // -- BASE CLASS --
 void AST_node::generate_code(ofstream& f) {}
