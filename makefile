@@ -1,14 +1,14 @@
-OBJS= lexer.o parser.o comp.o  yy.o
+OBJS= lexer.o parser.o comp.o  yy.o node.o
 CC= g++
 CFLAGS= -g -Wall  -std=gnu++0x
 
 comp: $(OBJS)
 	g++ ${CFLAGS} $(OBJS) -o comp  -lfl
 
-lexer.cc: naught.lex parser.o StrUtil.h
+lexer.cc: naught.lex parser.o StrUtil.h node.h
 	flex -o lexer.cc naught.lex
 
-parser.cc:  naught.bison StrUtil.h
+parser.cc:  naught.bison StrUtil.h node.h
 	bison --debug -d -o parser.cc naught.bison
 
 %.o:%.cc
