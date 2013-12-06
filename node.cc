@@ -134,8 +134,16 @@ paramlist_node::paramlist_node(AST_node* param) {
 }
 
 paramlist_node::~paramlist_node() {
-  for(size_t i=0; i<list.size(); i++) {
+  for(unsigned int i=0; i<list.size(); i++) {
     delete list[i];
+  }
+}
+
+void paramlist_node::generate_code(ofstream& f) {
+  list[0]->generate_code(f);
+  for (unsigned int i = 1; i < list.size(); i ++) {
+    f << ", ";
+    list[i]->generate_code(f);
   }
 }
 
@@ -144,6 +152,11 @@ param_node::param_node(string type, string id) {
     this->type = type;
     this->id = id;
 }
+
+void param_node::generate_code(ofstream& f) {
+  f << type << " " << id;
+}
+
 
 
 // function calls
@@ -264,9 +277,8 @@ return_node::return_node(expr_node* ret) {
 }
 
 void return_node::generate_code(ofstream& f) {
-  f << "return "; 
-  ret->generate_code(f); 
-  f<< ";"<<endl;
+  ret->generate_code(f);
+  f << "return " << ret->id << ";"<<endl;
 }
 
 return_node::~return_node() {

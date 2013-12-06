@@ -133,6 +133,8 @@ class paramlist_node : public AST_node {
   paramlist_node(AST_node* param);
 
   ~paramlist_node();
+
+  virtual void generate_code(ofstream& f);
 };
 
 class param_node : public AST_node {
@@ -141,6 +143,8 @@ class param_node : public AST_node {
   string type;
 
   param_node(string type, string id);
+
+  virtual void generate_code(ofstream& f);
 };
 
 // -- EXPRESSION NODE --
