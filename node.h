@@ -41,6 +41,8 @@ class AST_node {
   virtual void generate_code(ofstream &f);
   
   virtual ~AST_node();
+  
+  virtual void add_to_symbol_table(bool isGlobal);
 };
 // -- END BASE --
 
@@ -228,6 +230,7 @@ class vardecl_node : public AST_node {
   vardecl_node(string type, string id, bool e = false);
   ~vardecl_node();
   virtual void generate_code(ofstream& f);
+  virtual void add_to_symbol_table(bool isGlobal);
 };
 
 // return

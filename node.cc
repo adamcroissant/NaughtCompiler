@@ -4,18 +4,25 @@
 #include "node.h"
 #include <iostream>
 #include <map>
+#include <utility>
 
 using namespace std;
 
 static int temp_count;
 
-static map<string, table_element> global_table;
-static map<string, table_element> local_table;
+static map<string, pair<string, bool>> global_table;
+static map<string, pair<string, bool>> local_table;
+
 
 // -- BASE CLASS --
 void AST_node::generate_code(ofstream& f) {}
 
 AST_node::~AST_node(){}
+
+// writes a list of declarations to one of the symbol tables. If
+// isGlobal is true, it writes to the global symbol table, if 
+// isGlobal is false, it writes to the local symbol table
+void AST_node::add_to_symbol_table(bool isGlobal) {}
 // -- END BASE --
 
 // -- MODULE CLASS --
@@ -292,6 +299,14 @@ void vardecl_node::generate_code(ofstream& f) {
     assign->generate_code(f);
   }
 }
+  
+void vardecl_node::add_to_symbol_table(bool isGlobal){
+  if (isGlobal)
+    global_table[id] = *(new pair<string, bool>(type, false));
+  else
+    local_table[id] = *(new pair<string, bool>(type, false));
+}
+
 
 vardecl_node::~vardecl_node() {
   delete assign;
