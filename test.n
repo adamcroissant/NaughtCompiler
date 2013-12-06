@@ -1,6 +1,8 @@
-
-function test() {
   int x;
+  int y;
+  pointer p;
+function test() {
+  p = &x;
   x + 2 * y;
   return 0;
 }
