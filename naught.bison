@@ -389,8 +389,14 @@ term :
          */
         }
       | UNARY_OP term
-        { $$ = new print_node($2);
+        { if($1->getString().compare("print")) {
+          $$ = new print_node($2);
           //cout << *$$ << " -> term" << endl;
+          }else if($1->getString().compare("@")) {
+            $$= new dereference_node($2);
+          }else {
+            $$= new address_node($2);
+          }
         }
       | ID LPAREN arglist RPAREN  /* function call */
        { $$ = new function_node($1->getString(), $3);
