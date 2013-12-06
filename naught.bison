@@ -389,10 +389,10 @@ term :
          */
         }
       | UNARY_OP term
-        { if($1->getString().compare("print")) {
+        { if($1->getString().compare("print")==0) {
           $$ = new print_node($2);
           //cout << *$$ << " -> term" << endl;
-          }else if($1->getString().compare("@")) {
+          }else if($1->getString().compare("@")==0) {
             $$= new dereference_node($2);
           }else {
             $$= new address_node($2);

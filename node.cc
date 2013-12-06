@@ -613,7 +613,7 @@ void variable_node::generate_code(ofstream& f) {
   }
 
   type = it->second.first;
-  f << "type of variable '" << id << "' is " << type << endl;
+  //  f << "type of variable '" << id << "' is " << type << endl;
 }
 
 // intliteral_node class

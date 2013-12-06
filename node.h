@@ -49,9 +49,9 @@ class AST_node {
 // -- MODULE CLASS --
 class module_node : public AST_node {
  public:
-  AST_node* vardecl_list;
-  AST_node* funcdef_list;
-  AST_node* funcdecl_list;
+  vardecl_list_node* vardecl_list;
+  funcdef_list_node* funcdef_list;
+  funcdecl_list_node* funcdecl_list;
 
   module_node(vardecl_list_node* vardecl_list, funcdef_list_node* funcdef_list,
               funcdecl_list_node* funcdecl_list);
