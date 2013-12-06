@@ -404,16 +404,14 @@ variable_node::variable_node(string s) {
   id=s;
 }
 
-void variable_node::generate_code(ofstream& f) {
-  //return var_name;
-}
+void variable_node::generate_code(ofstream& f) {}
 
 // intliteral_node class
 IntLiteral_node::IntLiteral_node(int i) {
   literal = i;
 }
 void IntLiteral_node::generate_code(ofstream& f) {
-  //return to_string(literal);
+  id = to_string(literal);
 }
 
 // stringliteral_node class
