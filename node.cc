@@ -295,10 +295,10 @@ add_node::add_node(expr_node* left, expr_node* right) {
 
 void add_node::generate_code(ofstream& f) {
   left->generate_code(f);
-  right->generate_code(g);
+  right->generate_code(f);
   string temp = "temp_" + to_string(temp_count);
   temp_count ++;
-  f << "int " << temp << " = " left->id << " + " << right->id << ";" << endl;
+  f << "int " << temp << " = " << left->id << " + " << right->id << ";" << endl;
   id = temp;
 }
 
@@ -315,14 +315,12 @@ mult_node::mult_node(expr_node* left, expr_node* right) {
 }
 
 void mult_node::generate_code(ofstream& f) {
-  string temp = "temp_" + to_string(temp_count);
-  
-  temp_count ++;
-  f << "int " << temp << " = ";
   left->generate_code(f); 
-  f << " * ";
   right->generate_code(f); 
-  f<< ";" << endl;
+  string temp = "temp_" + to_string(temp_count);
+  temp_count ++;
+  id=temp;
+  f << "int " << temp << " = " << left->id << " * " << right->id << ";" << endl;
   //return temp;
 }
 
@@ -339,10 +337,10 @@ sub_node::sub_node(expr_node* left, expr_node* right) {
 
 void sub_node::generate_code(ofstream& f) {
   left->generate_code(f);
-  right->generate_code(g);
+  right->generate_code(f);
   string temp = "temp_" + to_string(temp_count);
   temp_count ++;
-  f << "int " << temp << " = " left->id << " - " << right->id << ";" << endl;
+  f << "int " << temp << " = " << left->id << " - " << right->id << ";" << endl;
   id = temp;
 }
 
@@ -358,13 +356,12 @@ div_node::div_node(expr_node* left, expr_node* right) {
 }
 
 void div_node::generate_code(ofstream& f) {
+  left->generate_code(f);
+  right->generate_code(f);
   string temp = "temp_" + to_string(temp_count);
   temp_count ++;
-  f << "int " << temp << " = ";
-  left->generate_code(f); 
-  f<< " / ";
-  right->generate_code(f); 
-  f<< ";" << endl;
+  id=temp;
+  f << "int " << temp << " = " << left->id << " / " << right->id << ";" << endl;
   //return temp;
 }
 
