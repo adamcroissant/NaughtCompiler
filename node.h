@@ -145,6 +145,7 @@ class param_node : public AST_node {
 
 // -- EXPRESSION NODE --
 class expr_node : public AST_node {
+ public:
   string id;
   string type;
 };
@@ -209,14 +210,14 @@ class vardecl_node : public AST_node {
   string type;
   string id;
   bool isExtern;
-  AST_node* assign;
+  expr_node* assign;
 
   /*vardecl_node(string type, string id) : AST_node() {
     this->type = type;
     this->id = id;
   }*/
 
-  vardecl_node(string type, string id, AST_node* assign);
+  vardecl_node(string type, string id, expr_node* assign);
 
   vardecl_node(string type, string id, bool e = false);
   ~vardecl_node();

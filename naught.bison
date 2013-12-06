@@ -31,6 +31,7 @@ extern AST_node *AST;
   //int32_t*                intlit;
   IntLiteral_node*        int_val;
   AST_node*               node;
+  expr_node*              enode;
   variable_node*          var;
   add_node*               add;
   sub_node*               sub;
@@ -94,8 +95,8 @@ extern AST_node *AST;
 %type <block> block
 %type <vardecl> vardecl
 %type <node> funcdecl
-%type <node> expr
-%type <node> term
+%type <enode> expr
+%type <enode> term
 %type <node> stmt
 
 %type <stmt_list> stmt_list
