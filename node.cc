@@ -364,13 +364,11 @@ void add_node::generate_code(ofstream& f) {
     exit(1);
   }
 
-  string temp = "temp_" + to_string(temp_count);
+  type = left->type;
+  id = "temp_" + to_string(temp_count);
   temp_count ++;
 
-  type = left->type;
-  id = temp;
-
-  f << left->type << " " << temp << " = " << left->id << " + " << right->id << ";" << endl;
+  f << left->type << " " << id << " = " << left->id << " + " << right->id << ";" << endl;
 }
 
 add_node::~add_node() {
@@ -401,10 +399,9 @@ void mult_node::generate_code(ofstream& f) {
   }
 
 
-  string temp = "temp_" + to_string(temp_count);
+  id = "temp_" + to_string(temp_count);
   temp_count ++;
-  id = temp;
-  f << type << " " << temp << " = " << left->id << " * " << right->id << ";" << endl;
+  f << "int " << id << " = " << left->id << " * " << right->id << ";" << endl;
   //return temp;
 }
 
@@ -434,10 +431,9 @@ void sub_node::generate_code(ofstream& f) {
     exit(1);
   }
 
-  string temp = "temp_" + to_string(temp_count);
+  id = "temp_" + to_string(temp_count);
   temp_count ++;
-  id = temp;
-  f << type << " " << temp << " = " << left->id << " - " << right->id << ";" << endl;
+  f << "int  " << id << " = " << left->id << " - " << right->id << ";" << endl;
 }
 
 sub_node::~sub_node() {
@@ -466,10 +462,9 @@ void div_node::generate_code(ofstream& f) {
     exit(1);
   }
 
-  string temp = "temp_" + to_string(temp_count);
+  id = "temp_" + to_string(temp_count);
   temp_count ++;
-  id = temp;
-  f << type << " " << temp << " = " << left->id << " / " << right->id << ";" << endl;
+  f << "int " << id << " = " << left->id << " / " << right->id << ";" << endl;
   //return temp;
 }
 
