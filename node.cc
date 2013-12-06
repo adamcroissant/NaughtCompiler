@@ -3,9 +3,15 @@
 
 #include "node.h"
 #include <iostream>
+#include <map>
+
 using namespace std;
 
 static int temp_count;
+
+static map<string, table_element> global_table;
+static map<string, table_element> local_table;
+
 // -- BASE CLASS --
 void AST_node::generate_code(ofstream& f) {}
 
