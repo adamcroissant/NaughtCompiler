@@ -295,15 +295,12 @@ add_node::add_node(expr_node* left, expr_node* right) {
 }
 
 void add_node::generate_code(ofstream& f) {
+  left->generate_code(f);
+  right->generate_code(g);
   string temp = "temp_" + to_string(temp_count);
-  
   temp_count ++;
-  f << "int " << temp << " = ";
-  left->generate_code(f); 
-  f<< " + ";
-  right->generate_code(f); 
-  f<< ";" << endl;
-  //return temp;
+  f << "int " << temp << " = " left->id << " + " << right->id << ";" << endl;
+  id = temp;
 }
 
 add_node::~add_node() {
@@ -342,14 +339,12 @@ sub_node::sub_node(expr_node* left, expr_node* right) {
 }
 
 void sub_node::generate_code(ofstream& f) {
+  left->generate_code(f);
+  right->generate_code(g);
   string temp = "temp_" + to_string(temp_count);
   temp_count ++;
-  f << "int " << temp << " = ";
-  left->generate_code(f); 
-  f<< " - ";
-  right->generate_code(f); 
-  f<< ";" << endl;
-  //return temp;
+  f << "int " << temp << " = " left->id << " - " << right->id << ";" << endl;
+  id = temp;
 }
 
 sub_node::~sub_node() {
