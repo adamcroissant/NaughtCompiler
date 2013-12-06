@@ -38,7 +38,11 @@ void module_node::generate_code(ofstream& f) {
   }
   
   if(vardecl_list != nullptr) {
+    for (unsigned int i = 0; i < vardecl_list->list.size(); i ++) {
+      vardecl_list->list[i]->add_to_symbol_table(true);
+    }
     vardecl_list->generate_code(f);
+    //    cout << global_table.size() << endl;
   }
   if(funcdef_list != nullptr) {
     funcdef_list->generate_code(f);
@@ -574,14 +578,14 @@ variable_node::variable_node(string s) {
 }
 
 void variable_node::generate_code(ofstream& f) {
-  map<string, table_element>::iterator it;
+  map<string, pair<string, bool> >::iterator it;
   it = global_table.find(id);
   if (it == global_table.end()) {
     cerr << "error: variable '" << id << "' undeclared" << endl;
     exit(1);
   }
 
-  type = it->second.type;
+  type = it->second.first;
   f << "type of variable '" << id << "' is " << type << endl;
 }
 
