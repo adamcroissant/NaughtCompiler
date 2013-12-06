@@ -280,12 +280,10 @@ vardecl_node::vardecl_node(string type, string id, bool e) {
 }
 
 void vardecl_node::generate_code(ofstream& f) {
-  if (assign == nullptr) {
-    f << type << " " << id << ";" << endl;
-  } else {
-    f << type << " " << id << " = "; 
-    assign->generate_code(f); 
-    f << ";" << endl;
+  f << type << " " << id << ";" << endl;
+
+  if (assign != nullptr) {
+    assign->generate_code(f);
   }
 }
 
@@ -323,6 +321,30 @@ ternary_node::~ternary_node() {
   delete right;
 }
 
+void ternary_node::generate_code(ofstream& f) {
+  question->generate_code(f);
+  left->generate_code(f);
+  right->generate_code(f);
+
+  if (left->type.compare(right->type) == 0) {
+    type = left->type;
+  } else {
+    cerr << "left and right sides of ternary are not of same type: "
+         << left->type << " & " << right->type << endl;
+    exit(1);
+  }
+
+  id = "temp_" + to_string(temp_count);
+  f << type << " " << id << ";" << endl;
+  f << "if (" << question->id << ") {" << endl;
+  f << id << " = " << left->id << ";" << endl;
+  f << "} else {" << endl;
+  f << id << " = " << right->id << ";" << endl;
+  f << "}" << endl;
+
+  temp_count ++;
+}
+
 // binary
 add_node::add_node(expr_node* left, expr_node* right) {
   this->left = left;
@@ -342,13 +364,11 @@ void add_node::generate_code(ofstream& f) {
     exit(1);
   }
 
-  string temp = "temp_" + to_string(temp_count);
+  type = left->type;
+  id = "temp_" + to_string(temp_count);
   temp_count ++;
 
-  type = left->type;
-  id = temp;
-
-  f << left->type << " " << temp << " = " << left->id << " + " << right->id << ";" << endl;
+  f << left->type << " " << id << " = " << left->id << " + " << right->id << ";" << endl;
 }
 
 add_node::~add_node() {
@@ -379,10 +399,9 @@ void mult_node::generate_code(ofstream& f) {
   }
 
 
-  string temp = "temp_" + to_string(temp_count);
+  id = "temp_" + to_string(temp_count);
   temp_count ++;
-  id = temp;
-  f << type << " " << temp << " = " << left->id << " * " << right->id << ";" << endl;
+  f << "int " << id << " = " << left->id << " * " << right->id << ";" << endl;
   //return temp;
 }
 
@@ -412,10 +431,9 @@ void sub_node::generate_code(ofstream& f) {
     exit(1);
   }
 
-  string temp = "temp_" + to_string(temp_count);
+  id = "temp_" + to_string(temp_count);
   temp_count ++;
-  id = temp;
-  f << type << " " << temp << " = " << left->id << " - " << right->id << ";" << endl;
+  f << "int  " << id << " = " << left->id << " - " << right->id << ";" << endl;
 }
 
 sub_node::~sub_node() {
@@ -444,10 +462,9 @@ void div_node::generate_code(ofstream& f) {
     exit(1);
   }
 
-  string temp = "temp_" + to_string(temp_count);
+  id = "temp_" + to_string(temp_count);
   temp_count ++;
-  id = temp;
-  f << type << " " << temp << " = " << left->id << " / " << right->id << ";" << endl;
+  f << "int " << id << " = " << left->id << " / " << right->id << ";" << endl;
   //return temp;
 }
 
@@ -467,6 +484,22 @@ assign_node::~assign_node() {
   delete right;
 }
 
+void assign_node::generate_code(ofstream &f){
+  left->generate_code(f);
+  right->generate_code(f);
+
+  if (left->type.compare(right->type) != 0){
+    cerr << "Improper Assign: assigning a " << right->type 
+	 << " to a " << left->type << endl;
+    exit(1);
+  }
+  
+  type = left->type;
+  id = left->id;
+
+  f << left->id << " = " << right->id << ";" << endl;
+    
+}
 // unary ops
 // print_node class
 print_node::print_node(expr_node* term) {
