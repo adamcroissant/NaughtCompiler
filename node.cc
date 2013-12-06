@@ -571,6 +571,12 @@ address_node::~address_node() {
 
 void address_node::generate_code(ofstream& f) {
   ptr->generate_code(f);
+  
+  if (ptr->type.compare("int") != 0) {
+    cerr << "error: can only use address-of operator on ints - attempted on '"
+         << ptr->type << " " << ptr->id << "'" << endl;
+  }
+
   string temp = "temp_" + to_string(temp_count);
   temp_count++;
   f<<"int* " <<temp<<" = " <<"&" << ptr->id<<";"<<endl;
@@ -580,6 +586,13 @@ void address_node::generate_code(ofstream& f) {
 
 void dereference_node::generate_code(ofstream& f) {
   ptr->generate_code(f);
+
+  if (ptr->type.compare("pointer") != 0) {
+    cerr << "error: can only dereference pointers - attempted to dereference '"
+         << ptr->type << " " << ptr->id << "'" << endl;
+    exit(1);
+  }
+
   string temp = "temp_" + to_string(temp_count);
   temp_count++;  
   f<<"int " <<temp<<" = " <<"*" << ptr->id<<";"<<endl; 
@@ -606,10 +619,13 @@ variable_node::variable_node(string s) {
 
 void variable_node::generate_code(ofstream& f) {
   map<string, pair<string, bool> >::iterator it;
-  it = global_table.find(id);
-  if (it == global_table.end()) {
-    cerr << "error: variable '" << id << "' undeclared" << endl;
-    exit(1);
+  it = local_table.find(id);
+  if (it == local_table.end()) {
+    it = global_table.find(id);
+    if (it == global_table.end()) {
+      cerr << "error: variable '" << id << "' undeclared" << endl;
+      exit(1);
+    }
   }
 
   type = it->second.first;
