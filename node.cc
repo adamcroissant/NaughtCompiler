@@ -512,6 +512,7 @@ print_node::~print_node() {
 
 address_node::address_node(expr_node* ptr) {
   this->ptr=ptr;
+  type="pointer";
 }
 
 address_node::~address_node() {
@@ -537,6 +538,7 @@ void dereference_node::generate_code(ofstream& f) {
 
 dereference_node::dereference_node(expr_node* ptr) {
   this->ptr=ptr;
+  type="int";
 }
 
 dereference_node::~dereference_node() {
