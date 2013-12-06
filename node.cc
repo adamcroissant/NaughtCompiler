@@ -361,22 +361,26 @@ void add_node::generate_code(ofstream& f) {
   left->generate_code(f);
   right->generate_code(f);
   if(left->type.compare("unidentified") ==0 && right->type.compare("unidentified")==0) {
-    cerr << "Error: unkown type for both expressions" <<endl;
+    cerr << "Error: unkown type for both expressions given to add" <<endl;
     exit(1);
   }
   if(left->type.compare("unidentified")==0) {
-    type=right->type; 
+    type=right->type;
+    cerr<<"Warning: addition of an unidentified expression"<<endl; 
   }else if(left->type.compare("unidentified")==0) {
     type=right->type;
+    cerr<<"Warning: addition of an unidentified expression"<<endl;
   }else if (left->type.compare(right->type) != 0){
     cerr << "Error: Improper addition: Adding two expressions of different types" << endl;
-    exit(1);
-  }else if (left->type.compare("pointer") == 0 || left->type.compare("pointer") == 0){
-    cerr << "Error: Improper expressions: trying to add to a pointer" << endl;
     exit(1);
   }else {
     type = left->type;
   }
+  
+  if (left->type.compare("pointer") == 0 || left->type.compare("pointer") == 0){
+    cerr << "Error: Improper expressions: trying to add to a pointer" << endl;
+    exit(1);
+  } 
 
   id = "temp_" + to_string(temp_count);
   temp_count ++;
@@ -400,7 +404,11 @@ mult_node::mult_node(expr_node* left, expr_node* right) {
 void mult_node::generate_code(ofstream& f) {
   left->generate_code(f); 
   right->generate_code(f); 
-
+  if(left->type.compare("unidentified") ==0 && right->type.compare("unidentified")==0) {
+    left->type="int";
+    right->type="int"; 
+    cerr<<"Warning: multiplication of an unidentified expression"<<endl;
+  }
   if (left->type.compare(right->type) != 0){
     cerr << "Improper multiplications: multiplying two expressions of different types" << endl;
     exit(1);
@@ -433,6 +441,11 @@ sub_node::sub_node(expr_node* left, expr_node* right) {
 void sub_node::generate_code(ofstream& f) {
   left->generate_code(f);
   right->generate_code(f);
+  if(left->type.compare("unidentified") ==0 && right->type.compare("unidentified")==0) {
+    left->type="int";
+    right->type="int";
+    cerr<<"Warning: subtraction of an unidentified expression"<<endl;
+  }
 
   if (left->type.compare(right->type) != 0){
     cerr << "Improper subtraction: subtracting two expressions of different types" << endl;
@@ -464,6 +477,11 @@ div_node::div_node(expr_node* left, expr_node* right) {
 void div_node::generate_code(ofstream& f) {
   left->generate_code(f);
   right->generate_code(f);
+  if(left->type.compare("unidentified") ==0 && right->type.compare("unidentified")==0) {
+    left->type="int";
+    right->type="int";
+    cerr<<"Warning: multiplication of an unidentified expression"<<endl;
+  }
 
   if (left->type.compare(right->type) != 0){
     cerr << "Improper division: dividing two expressions of different types" << endl;
