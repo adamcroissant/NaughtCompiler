@@ -8,7 +8,7 @@ class table_element {
   std::string type;
   bool is_defined;
 
-  table_element(std::string& type, bool& is_defined);
+  table_element(std::string& type, bool is_defined);
 };
 
 #endif
