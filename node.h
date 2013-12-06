@@ -211,6 +211,7 @@ class vardecl_list_node : public AST_node {
   vector<AST_node*> list;
   ~vardecl_list_node();
   virtual void generate_code(ofstream& f);
+  void add_to_symbol_table(bool isGlobal);
 };
 
 class vardecl_node : public AST_node {

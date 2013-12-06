@@ -38,9 +38,7 @@ void module_node::generate_code(ofstream& f) {
   }
   
   if(vardecl_list != nullptr) {
-    for (unsigned int i = 0; i < vardecl_list->list.size(); i ++) {
-      vardecl_list->list[i]->add_to_symbol_table(true);
-    }
+    vardecl_list->add_to_symbol_table(true);
     vardecl_list->generate_code(f);
     //    cout << global_table.size() << endl;
   }
@@ -233,6 +231,7 @@ block_node::block_node(AST_node* vdecl_l, AST_node* stmt_l) {
 
 void block_node::generate_code(ofstream& f) {
   if (vardecl_list != nullptr) {
+    vardecl_list->add_to_symbol_table(false);
     vardecl_list->generate_code(f);
   }
   
@@ -277,6 +276,12 @@ vardecl_list_node::~vardecl_list_node() {
   }
 }
 
+void vardecl_list_node::add_to_symbol_table(bool isGlobal) {
+  for (unsigned int i = 0; i < list.size(); i ++) {
+      list[i]->add_to_symbol_table(isGlobal);
+  }
+
+}
 void vardecl_list_node::generate_code(ofstream& f) {
   for (size_t i = 0; i < list.size(); i ++) {
     list[i]->generate_code(f);
