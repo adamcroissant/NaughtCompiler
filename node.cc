@@ -322,7 +322,7 @@ void mult_node::generate_code(ofstream& f) {
   string temp = "temp_" + to_string(temp_count);
   
   temp_count ++;
-  f << "int " << temp << " = " << 
+  f << "int " << temp << " = ";
   left->generate_code(f); 
   f << " * ";
   right->generate_code(f); 

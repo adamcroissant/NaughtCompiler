@@ -145,6 +145,7 @@ class param_node : public AST_node {
 
 // -- EXPRESSION NODE --
 class expr_node : public AST_node {
+ public:
   string id;
   string type;
 };
