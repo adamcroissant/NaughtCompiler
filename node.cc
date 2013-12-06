@@ -280,12 +280,10 @@ vardecl_node::vardecl_node(string type, string id, bool e) {
 }
 
 void vardecl_node::generate_code(ofstream& f) {
-  if (assign == nullptr) {
-    f << type << " " << id << ";" << endl;
-  } else {
-    f << type << " " << id << " = "; 
-    assign->generate_code(f); 
-    f << ";" << endl;
+  f << type << " " << id << ";" << endl;
+
+  if (assign != nullptr) {
+    assign->generate_code(f);
   }
 }
 
@@ -328,8 +326,16 @@ void ternary_node::generate_code(ofstream& f) {
   left->generate_code(f);
   right->generate_code(f);
 
-  id = "temp_" + to_string(temp_count);
+  if (left->type.compare(right->type) == 0) {
+    type = left->type;
+  } else {
+    cerr << "left and right sides of ternary are not of same type: "
+         << left->type << " & " << right->type << endl;
+    exit(1);
+  }
 
+  id = "temp_" + to_string(temp_count);
+  f << id << ";" << endl;
   f << "if (" << question->id << ") {" << endl;
   f << id << " = " << left->id << ";" << endl;
   f << "} else {" << endl;
@@ -483,20 +489,20 @@ assign_node::~assign_node() {
   delete right;
 }
 
-assign_node::generate_code(ofstream &f){
+void assign_node::generate_code(ofstream &f){
   left->generate_code(f);
   right->generate_code(f);
 
-  if (left.type.compare(right.compare) != 0){
-    cerr << "Improper Assign: assigning a " << right.type 
-	 << " to a " << left.type << endl;
+  if (left->type.compare(right->type) != 0){
+    cerr << "Improper Assign: assigning a " << right->type 
+	 << " to a " << left->type << endl;
     exit(1);
   }
   
   type = left->type;
   id = left->id;
 
-  f << left.id << " = " << right.id << endl;
+  f << left->id << " = " << right->id << ";" << endl;
     
 }
 // unary ops
