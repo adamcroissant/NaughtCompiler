@@ -7,9 +7,31 @@
 #include <fstream>
 using namespace std;
 
+class variable_node;
+class sub_node;
+class div_node;
+class mult_node;
+class vardecl_node;
 class vardecl_list_node;
+class stmtlist_node;
+class funcdef_node;
 class funcdef_list_node;
+class funcdecl_node;
 class funcdecl_list_node;
+class block_node;
+class module_node;
+class ternary_node;
+class arglist_node;
+class paramlist_node;
+class assign_node;
+class IntLiteral_node;
+class StringLiteral_node;
+class return_node;
+class sfuncdef_node;
+class sfuncdecl_node;
+class funcion_node;
+class param_node;
+class print_node;
 
 // -- BASE CLASS --
 class AST_node {
