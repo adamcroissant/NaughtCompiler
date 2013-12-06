@@ -159,7 +159,7 @@ function_node::~function_node(){
 }
 
 // arglist_node class
-arglist_node::arglist_node(AST_node* node) {
+arglist_node::arglist_node(expr_node* node) {
   list.push_back(node);
 }
 arglist_node::~arglist_node() {
@@ -196,7 +196,7 @@ block_node::~block_node(){
 // statements
 
 // stmtlist_node class
-stmtlist_node::stmtlist_node(AST_node* node) : AST_node() {
+stmtlist_node::stmtlist_node(AST_node* node) {
   list.push_back(node);
 }
 
@@ -258,7 +258,7 @@ vardecl_node::~vardecl_node() {
 }
 
 // return_node class
-return_node::return_node(AST_node* ret) {
+return_node::return_node(expr_node* ret) {
   this->ret = ret;
 }
 
@@ -276,7 +276,7 @@ return_node::~return_node() {
 
 // -- OPERATORS --
 // ternary
-ternary_node::ternary_node(AST_node* question, AST_node* left, AST_node* right) {
+ternary_node::ternary_node(expr_node* question, expr_node* left, expr_node* right) {
   this->question = question;
   this->left = left;
   this->right = right;
@@ -289,7 +289,7 @@ ternary_node::~ternary_node() {
 }
 
 // binary
-add_node::add_node(AST_node* left, AST_node* right) {
+add_node::add_node(expr_node* left, expr_node* right) {
   this->left = left;
   this->right = right;
 }
@@ -313,7 +313,7 @@ add_node::~add_node() {
 
 
 // mult_node class
-mult_node::mult_node(AST_node* left, AST_node* right) {
+mult_node::mult_node(expr_node* left, expr_node* right) {
   this->left = left;
   this->right = right;
 }
@@ -336,7 +336,7 @@ mult_node::~mult_node() {
 }
 
 // sub_node class
-sub_node::sub_node(AST_node* left, AST_node* right) {
+sub_node::sub_node(expr_node* left, expr_node* right) {
   this->left = left;
   this->right = right;
 }
@@ -358,7 +358,7 @@ sub_node::~sub_node() {
 }
 
 // div_node class
-div_node::div_node(AST_node* left, AST_node* right) {
+div_node::div_node(expr_node* left, expr_node* right) {
   this->left = left;
   this->right = right;
 }
@@ -380,7 +380,7 @@ div_node::~div_node() {
 }
 
 // assign_node class
-assign_node::assign_node(AST_node* left, AST_node* right) {
+assign_node::assign_node(expr_node* left, expr_node* right) {
   this->left = left;
   this->right = right;
 }
@@ -392,7 +392,7 @@ assign_node::~assign_node() {
 
 // unary ops
 // print_node class
-print_node::print_node(AST_node* term) {
+print_node::print_node(expr_node* term) {
   this->term = term;
 }
 
@@ -406,7 +406,7 @@ print_node::~print_node() {
 
 // variable node class
 variable_node::variable_node(string s) { 
-  var_name=s;
+  id=s;
 }
 
 void variable_node::generate_code(ofstream& f) {
