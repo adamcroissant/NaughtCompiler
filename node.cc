@@ -21,6 +21,8 @@ static string ntype_to_ctype(string ntype) {
   // will need to change this one later when we actually have
   // nstring_st allocation/generation working properly
   if (ntype.compare("string") == 0) return "string";
+  
+  return "";
 }
 
 
@@ -312,7 +314,7 @@ vardecl_node::vardecl_node(string type, string id, bool e) {
 }
 
 void vardecl_node::generate_code(ofstream& f) {
-  f << type << " " << id << ";" << endl;
+  f << ntype_to_ctype(type) << " " << id << ";" << endl;
 
   if (assign != nullptr) {
     assign->generate_code(f);
