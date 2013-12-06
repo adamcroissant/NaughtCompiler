@@ -263,9 +263,8 @@ return_node::return_node(expr_node* ret) {
 }
 
 void return_node::generate_code(ofstream& f) {
-  f << "return "; 
-  ret->generate_code(f); 
-  f<< ";"<<endl;
+  ret->generate_code(f);
+  f << "return " << ret->id << ";"<<endl;
 }
 
 return_node::~return_node() {
