@@ -559,7 +559,15 @@ variable_node::variable_node(string s) {
 }
 
 void variable_node::generate_code(ofstream& f) {
-  type = "int";
+  map<string, table_element>::iterator it;
+  it = global_table.find(id);
+  if (it == global_table.end()) {
+    cerr << "error: variable '" << id << "' undeclared" << endl;
+    exit(1);
+  }
+
+  type = it->second.type;
+  f << "type of variable '" << id << "' is " << type << endl;
 }
 
 // intliteral_node class
