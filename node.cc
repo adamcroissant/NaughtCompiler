@@ -231,7 +231,7 @@ void vardecl_list_node::generate_code(ofstream& f) {
 }
 
 // vardecl_node class
-vardecl_node::vardecl_node(string type, string id, AST_node* assign) {
+vardecl_node::vardecl_node(string type, string id, expr_node* assign) {
   this->assign = assign;
   this->type = type;
   this->id = id;
