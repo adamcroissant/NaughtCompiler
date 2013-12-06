@@ -2,6 +2,7 @@
 #define __NODE_CC__
 
 #include "node.h"
+#include <iostream>
 using namespace std;
 
 static int temp_count;
@@ -133,8 +134,16 @@ paramlist_node::paramlist_node(AST_node* param) {
 }
 
 paramlist_node::~paramlist_node() {
-  for(size_t i=0; i<list.size(); i++) {
+  for(unsigned int i=0; i<list.size(); i++) {
     delete list[i];
+  }
+}
+
+void paramlist_node::generate_code(ofstream& f) {
+  list[0]->generate_code(f);
+  for (unsigned int i = 1; i < list.size(); i ++) {
+    f << ", ";
+    list[i]->generate_code(f);
   }
 }
 
@@ -143,6 +152,11 @@ param_node::param_node(string type, string id) {
     this->type = type;
     this->id = id;
 }
+
+void param_node::generate_code(ofstream& f) {
+  f << type << " " << id;
+}
+
 
 
 // function calls
@@ -318,10 +332,23 @@ add_node::add_node(expr_node* left, expr_node* right) {
 void add_node::generate_code(ofstream& f) {
   left->generate_code(f);
   right->generate_code(f);
+  if (left->type.compare(right->type) != 0){
+    cerr << "Improper addition: Adding two expressions of different types" << endl;
+    exit(1);
+  }
+
+  if (left->type.compare("pointer") == 0 || right->type.compare("pointer") == 0){
+    cerr << "Improper expressions: trying to add to a pointer" << endl;
+    exit(1);
+  }
+
   string temp = "temp_" + to_string(temp_count);
   temp_count ++;
-  f << "int " << temp << " = " << left->id << " + " << right->id << ";" << endl;
+
+  type = left->type;
   id = temp;
+
+  f << left->type << " " << temp << " = " << left->id << " + " << right->id << ";" << endl;
 }
 
 add_node::~add_node() {
@@ -334,15 +361,28 @@ add_node::~add_node() {
 mult_node::mult_node(expr_node* left, expr_node* right) {
   this->left = left;
   this->right = right;
+  type = "int";
 }
 
 void mult_node::generate_code(ofstream& f) {
   left->generate_code(f); 
   right->generate_code(f); 
+
+  if (left->type.compare(right->type) != 0){
+    cerr << "Improper multiplications: multiplying two expressions of different types" << endl;
+    exit(1);
+  }
+
+  if (left->type.compare("int") != 0 || right->type.compare("int") != 0){
+    cerr << "Improper expressions: trying to multiply to a non-integer" << endl;
+    exit(1);
+  }
+
+
   string temp = "temp_" + to_string(temp_count);
   temp_count ++;
-  id=temp;
-  f << "int " << temp << " = " << left->id << " * " << right->id << ";" << endl;
+  id = temp;
+  f << type << " " << temp << " = " << left->id << " * " << right->id << ";" << endl;
   //return temp;
 }
 
@@ -355,15 +395,27 @@ mult_node::~mult_node() {
 sub_node::sub_node(expr_node* left, expr_node* right) {
   this->left = left;
   this->right = right;
+  type = "int";
 }
 
 void sub_node::generate_code(ofstream& f) {
   left->generate_code(f);
   right->generate_code(f);
+
+  if (left->type.compare(right->type) != 0){
+    cerr << "Improper subtraction: subtracting two expressions of different types" << endl;
+    exit(1);
+  }
+
+  if (left->type.compare("int") != 0 || right->type.compare("int") != 0){
+    cerr << "Improper expressions: trying to subtract with a non-integer" << endl;
+    exit(1);
+  }
+
   string temp = "temp_" + to_string(temp_count);
   temp_count ++;
-  f << "int " << temp << " = " << left->id << " - " << right->id << ";" << endl;
   id = temp;
+  f << type << " " << temp << " = " << left->id << " - " << right->id << ";" << endl;
 }
 
 sub_node::~sub_node() {
@@ -375,15 +427,27 @@ sub_node::~sub_node() {
 div_node::div_node(expr_node* left, expr_node* right) {
   this->left = left;
   this->right = right;
+  type = "int";
 }
 
 void div_node::generate_code(ofstream& f) {
   left->generate_code(f);
   right->generate_code(f);
+
+  if (left->type.compare(right->type) != 0){
+    cerr << "Improper division: dividing two expressions of different types" << endl;
+    exit(1);
+  }
+
+  if (left->type.compare("int") != 0 || right->type.compare("int") != 0){
+    cerr << "Improper expressions: trying to divide with a non-integer" << endl;
+    exit(1);
+  }
+
   string temp = "temp_" + to_string(temp_count);
   temp_count ++;
-  id=temp;
-  f << "int " << temp << " = " << left->id << " / " << right->id << ";" << endl;
+  id = temp;
+  f << type << " " << temp << " = " << left->id << " / " << right->id << ";" << endl;
   //return temp;
 }
 
@@ -419,13 +483,16 @@ print_node::~print_node() {
 
 // variable node class
 variable_node::variable_node(string s) { 
-  id=s;
+  id = s;
 }
 
-void variable_node::generate_code(ofstream& f) {}
+void variable_node::generate_code(ofstream& f) {
+  type = "int";
+}
 
 // intliteral_node class
 IntLiteral_node::IntLiteral_node(int i) {
+  type = "int";
   literal = i;
 }
 void IntLiteral_node::generate_code(ofstream& f) {
@@ -434,6 +501,7 @@ void IntLiteral_node::generate_code(ofstream& f) {
 
 // stringliteral_node class
 stringliteral_node::stringliteral_node(string str) {
+  type = "string";
   literal.len = str.length();
   for (size_t i = 0; i < str.length(); i ++) {
     literal.str[i] = str[i];
