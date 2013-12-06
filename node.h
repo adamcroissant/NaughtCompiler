@@ -14,7 +14,7 @@ class funcdecl_list_node;
 // -- BASE CLASS --
 class AST_node {
  public:
-  virtual string generate_code(ofstream &f);
+  virtual void generate_code(ofstream &f);
   
   virtual ~AST_node();
 };
@@ -30,7 +30,7 @@ class module_node : public AST_node {
   module_node(vardecl_list_node* vardecl_list, funcdef_list_node* funcdef_list,
               funcdecl_list_node* funcdecl_list);
 
-  virtual string generate_code(ofstream& f);
+  virtual void generate_code(ofstream& f);
 
   ~module_node();
 };
@@ -44,7 +44,7 @@ class funcdef_list_node : public AST_node {
 
   funcdef_list_node(AST_node* funcdef);  
 
-  virtual string generate_code(ofstream& f);
+  virtual void generate_code(ofstream& f);
 
   ~funcdef_list_node();
 };
@@ -57,7 +57,7 @@ class funcdef_node : public AST_node {
 
   funcdef_node(string id, AST_node* paramlist, AST_node* block);
 
-  virtual string generate_code(ofstream& f);
+  virtual void generate_code(ofstream& f);
 
   ~funcdef_node();
 };
@@ -152,7 +152,7 @@ class block_node : public AST_node {
 
   block_node(AST_node* vdecl_l, AST_node* stmt_l);
 
-  virtual string generate_code(ofstream& f);
+  virtual void generate_code(ofstream& f);
 
   ~block_node();
 };
@@ -163,7 +163,7 @@ class stmtlist_node : public AST_node {
   vector<AST_node*> list;
 
   stmtlist_node(AST_node* node);
-  virtual string generate_code(ofstream& f);
+  virtual void generate_code(ofstream& f);
   ~stmtlist_node();
 
 };
@@ -174,7 +174,7 @@ class vardecl_list_node : public AST_node {
   vardecl_list_node(AST_node* node);
   vector<AST_node*> list;
   ~vardecl_list_node();
-  virtual string generate_code(ofstream& f);
+  virtual void generate_code(ofstream& f);
 };
 
 class vardecl_node : public AST_node {
@@ -193,7 +193,7 @@ class vardecl_node : public AST_node {
 
   vardecl_node(string type, string id, bool e = false);
   ~vardecl_node();
-  virtual string generate_code(ofstream& f);
+  virtual void generate_code(ofstream& f);
 };
 
 // return
@@ -203,7 +203,7 @@ class return_node : public AST_node {
   return_node(AST_node *ret);
   ~return_node();
 
-  virtual string generate_code(ofstream& f);
+  virtual void generate_code(ofstream& f);
 };
 // -- END CODE BODY --
 
@@ -228,7 +228,7 @@ class add_node : public AST_node {
 
     add_node(AST_node* left, AST_node* right);
     ~add_node();
-    virtual string generate_code(ofstream& f);
+    virtual void generate_code(ofstream& f);
 };
 
 class mult_node : public AST_node {
@@ -238,7 +238,7 @@ class mult_node : public AST_node {
 
     mult_node(AST_node* left, AST_node* right);
     ~mult_node();
-    virtual string generate_code(ofstream& f);
+    virtual void generate_code(ofstream& f);
 };
 
 class sub_node : public AST_node {
@@ -248,7 +248,7 @@ class sub_node : public AST_node {
 
     sub_node(AST_node* left, AST_node* right);
     ~sub_node();
-    virtual string generate_code(ofstream& f);
+    virtual void generate_code(ofstream& f);
 };
 
 class div_node : public AST_node {
@@ -258,7 +258,7 @@ class div_node : public AST_node {
 
     div_node(AST_node* left, AST_node* right);
     ~div_node();
-    virtual string generate_code(ofstream& f);
+    virtual void generate_code(ofstream& f);
 };
 
 class assign_node : public AST_node {
@@ -285,14 +285,14 @@ class variable_node : public AST_node {
     variable_node(string s);
 
     string var_name;
-    virtual string generate_code(ofstream& f);
+    virtual void generate_code(ofstream& f);
 };
 
 class IntLiteral_node : public AST_node {
  public:
   int literal;
   IntLiteral_node(int i);
-  virtual string generate_code(ofstream& f);
+  virtual void generate_code(ofstream& f);
 };
 
 class stringliteral_node : public AST_node {

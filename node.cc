@@ -6,9 +6,8 @@ using namespace std;
 
 static int temp_count;
 // -- BASE CLASS --
-string AST_node::generate_code(ofstream& f) {
-  return "";
-}
+void AST_node::generate_code(ofstream& f) {}
+
 AST_node::~AST_node(){}
 // -- END BASE --
 
@@ -19,7 +18,7 @@ module_node::module_node(vardecl_list_node* vardecl_list, funcdef_list_node* fun
     this->funcdef_list = funcdef_list;
     this->funcdecl_list = funcdecl_list;
 }
-string module_node::generate_code(ofstream& f) {
+void module_node::generate_code(ofstream& f) {
   if(funcdecl_list != nullptr) {
     funcdecl_list->generate_code(f);
   }
@@ -30,7 +29,6 @@ string module_node::generate_code(ofstream& f) {
   if(funcdef_list != nullptr) {
     funcdef_list->generate_code(f);
   }
-  return "";
 }
 module_node::~module_node() {
     delete funcdecl_list;
@@ -53,11 +51,10 @@ funcdef_list_node::~funcdef_list_node() {
   }
 }
 
-string funcdef_list_node::generate_code(ofstream& f) {
+void funcdef_list_node::generate_code(ofstream& f) {
   for (uint32_t i = 0; i < list.size(); i ++) {
     list[i]->generate_code(f);
   }
-  return "";
 }
 
 // funcdef_node class
@@ -67,15 +64,14 @@ funcdef_node::funcdef_node(string id, AST_node* paramlist, AST_node* block) {
   this->id=id;
 }   
 
-string funcdef_node::generate_code(ofstream& f) {
+void funcdef_node::generate_code(ofstream& f) {
   f <<"int " << id << "(";
   if (paramlist != nullptr) {
-    f << paramlist->generate_code(f);
+    paramlist->generate_code(f);
   }
   f << ") {" << endl;
-  f << block->generate_code(f) << endl;
+  block->generate_code(f);
   f << "}" << endl;
-  return "";
 }
 
 funcdef_node::~funcdef_node(){
@@ -182,7 +178,7 @@ block_node::block_node(AST_node* vdecl_l, AST_node* stmt_l) {
   this->stmt_list = stmt_l;
 }
 
-string block_node::generate_code(ofstream& f) {
+void block_node::generate_code(ofstream& f) {
   if (vardecl_list != nullptr) {
     vardecl_list->generate_code(f);
   }
@@ -190,7 +186,6 @@ string block_node::generate_code(ofstream& f) {
   if (stmt_list != nullptr) {
     stmt_list->generate_code(f);
   }
-  return "";
 }
 
 block_node::~block_node(){
@@ -205,11 +200,10 @@ stmtlist_node::stmtlist_node(AST_node* node) : AST_node() {
   list.push_back(node);
 }
 
-string stmtlist_node::generate_code(ofstream& f) {
+void stmtlist_node::generate_code(ofstream& f) {
   for(size_t i=0; i<list.size(); i++) {
     list[i]->generate_code(f);
   }
-  return "";
 }
   
 stmtlist_node::~stmtlist_node() {
@@ -230,11 +224,10 @@ vardecl_list_node::~vardecl_list_node() {
   }
 }
 
-string vardecl_list_node::generate_code(ofstream& f) {
+void vardecl_list_node::generate_code(ofstream& f) {
   for (size_t i = 0; i < list.size(); i ++) {
     list[i]->generate_code(f);
   }
-  return "";
 }
 
 // vardecl_node class
@@ -250,13 +243,14 @@ vardecl_node::vardecl_node(string type, string id, bool e) {
     this->id = id;
 }
 
-string vardecl_node::generate_code(ofstream& f) {
+void vardecl_node::generate_code(ofstream& f) {
   if (assign == nullptr) {
     f << type << " " << id << ";" << endl;
   } else {
-    f << type << " " << id << " = " << assign->generate_code(f) << ";" << endl;
+    f << type << " " << id << " = "; 
+    assign->generate_code(f); 
+    f << ";" << endl;
   }
-  return "";
 }
 
 vardecl_node::~vardecl_node() {
@@ -268,9 +262,10 @@ return_node::return_node(AST_node* ret) {
   this->ret = ret;
 }
 
-string return_node::generate_code(ofstream& f) {
-  f << "return " << ret->generate_code(f) << ";";
-  return "";
+void return_node::generate_code(ofstream& f) {
+  f << "return "; 
+  ret->generate_code(f); 
+  f<< ";"<<endl;
 }
 
 return_node::~return_node() {
@@ -299,13 +294,16 @@ add_node::add_node(AST_node* left, AST_node* right) {
   this->right = right;
 }
 
-string add_node::generate_code(ofstream& f) {
+void add_node::generate_code(ofstream& f) {
   string temp = "temp_" + to_string(temp_count);
   
   temp_count ++;
-  f << "int " << temp << " = " << left->generate_code(f) << " + "
-    << right->generate_code(f) << ";" << endl;
-  return temp;
+  f << "int " << temp << " = ";
+  left->generate_code(f); 
+  f<< " + ";
+  right->generate_code(f); 
+  f<< ";" << endl;
+  //return temp;
 }
 
 add_node::~add_node() {
@@ -320,13 +318,16 @@ mult_node::mult_node(AST_node* left, AST_node* right) {
   this->right = right;
 }
 
-string mult_node::generate_code(ofstream& f) {
+void mult_node::generate_code(ofstream& f) {
   string temp = "temp_" + to_string(temp_count);
   
   temp_count ++;
-  f << "int " << temp << " = " << left->generate_code(f) << " * "
-    << right->generate_code(f) << ";" << endl;
-  return temp;
+  f << "int " << temp << " = " << 
+  left->generate_code(f); 
+  f << " * ";
+  right->generate_code(f); 
+  f<< ";" << endl;
+  //return temp;
 }
 
 mult_node::~mult_node() {
@@ -340,12 +341,15 @@ sub_node::sub_node(AST_node* left, AST_node* right) {
   this->right = right;
 }
 
-string sub_node::generate_code(ofstream& f) {
+void sub_node::generate_code(ofstream& f) {
   string temp = "temp_" + to_string(temp_count);
   temp_count ++;
-  f << "int " << temp << " = " << left->generate_code(f) << " - "
-    << right->generate_code(f) << ";" << endl;
-  return temp;
+  f << "int " << temp << " = ";
+  left->generate_code(f); 
+  f<< " - ";
+  right->generate_code(f); 
+  f<< ";" << endl;
+  //return temp;
 }
 
 sub_node::~sub_node() {
@@ -359,12 +363,15 @@ div_node::div_node(AST_node* left, AST_node* right) {
   this->right = right;
 }
 
-string div_node::generate_code(ofstream& f) {
+void div_node::generate_code(ofstream& f) {
   string temp = "temp_" + to_string(temp_count);
   temp_count ++;
-  f << "int " << temp << " = " << left->generate_code(f) << " / "
-    << right->generate_code(f) << ";" << endl;
-  return temp;
+  f << "int " << temp << " = ";
+  left->generate_code(f); 
+  f<< " / ";
+  right->generate_code(f); 
+  f<< ";" << endl;
+  //return temp;
 }
 
 div_node::~div_node() {
@@ -402,16 +409,16 @@ variable_node::variable_node(string s) {
   var_name=s;
 }
 
-string variable_node::generate_code(ofstream& f) {
-  return var_name;
+void variable_node::generate_code(ofstream& f) {
+  //return var_name;
 }
 
 // intliteral_node class
 IntLiteral_node::IntLiteral_node(int i) {
   literal = i;
 }
-string IntLiteral_node::generate_code(ofstream& f) {
-  return to_string(literal);
+void IntLiteral_node::generate_code(ofstream& f) {
+  //return to_string(literal);
 }
 
 // stringliteral_node class
