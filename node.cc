@@ -13,8 +13,8 @@ AST_node::~AST_node(){}
 // -- END BASE --
 
 // -- MODULE CLASS --
-module_node::module_node(AST_node* vardecl_list, AST_node* funcdef_list,
-              AST_node* funcdecl_list) {
+module_node::module_node(vardecl_list_node* vardecl_list, funcdef_list_node* funcdef_list,
+              funcdecl_list_node* funcdecl_list) {
     this->vardecl_list = vardecl_list;
     this->funcdef_list = funcdef_list;
     this->funcdecl_list = funcdecl_list;

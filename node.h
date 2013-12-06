@@ -7,6 +7,10 @@
 #include <fstream>
 using namespace std;
 
+class vardecl_list_node;
+class funcdef_list_node;
+class funcdecl_list_node;
+
 // -- BASE CLASS --
 class AST_node {
  public:
@@ -23,8 +27,8 @@ class module_node : public AST_node {
   AST_node* funcdef_list;
   AST_node* funcdecl_list;
 
-  module_node(AST_node* vardecl_list, AST_node* funcdef_list,
-              AST_node* funcdecl_list);
+  module_node(vardecl_list_node* vardecl_list, funcdef_list_node* funcdef_list,
+              funcdecl_list_node* funcdecl_list);
 
   virtual string generate_code(ofstream& f);
 
