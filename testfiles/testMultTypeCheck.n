@@ -1,0 +1,5 @@
+function testMult() {
+  int x = 1;
+  string s = "s";
+  x * s;
+}

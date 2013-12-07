@@ -1,0 +1,6 @@
+#include "example.h"
+
+function fact(int x, pointer p) {
+  print x;
+  return @p = x ? x * fact(x-1,p) : 1;
+}

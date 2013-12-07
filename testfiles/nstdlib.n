@@ -1,0 +1,3 @@
+function nstrlen ( string s ) {
+  return nstr_to_len(s);
+}

@@ -17,11 +17,6 @@ static map<string, pair<string, bool>> local_table;
 static string string_malloc(string id, ofstream& f) {
   string temp = "temp_" + to_string(temp_count);
   temp_count++;
-  /*
-    char *temp_0 = (char *)malloc(5 + strlen("blah"));
-    temp_0 += 4;
-    strcpy(temp_0, "blah");
-  */
   f << "char *" << temp << " = " << "(char *)malloc(5 + strlen(" << id << "));" << endl;
   f << "*((int*) " << temp << ")" << " = " <<"strlen("  << id << ");" <<endl;
   f << temp << " += 4;" << endl;
@@ -74,7 +69,7 @@ void module_node::generate_code(ofstream& f) {
     funcdef_list->generate_code(f);
   }
 
-  cout << "global symbol table has " << global_table.size() << " elements" << endl;
+  //  cout << "global symbol table has " << global_table.size() << " elements" << endl;
 }
 module_node::~module_node() {
     delete funcdecl_list;
@@ -119,7 +114,7 @@ void funcdef_node::generate_code(ofstream& f) {
   f << ") {" << endl;
 
   // logging for local symbol table size checking
-  cout << "function: " << id << endl;
+  // cout << "function: " << id << endl;
   
   block->generate_code(f);
   f << "}" << endl;
@@ -431,10 +426,10 @@ void block_node::generate_code(ofstream& f) {
   }
 
   // logging statements for local symbol table size testing
-  cout << "\tlocal symbol table has " << local_table.size() << " elements" << endl;
+  //cout << "\tlocal symbol table has " << local_table.size() << " elements" << endl;
 
   local_table.clear();
-  cout << "\tcleared local table: size = " << local_table.size() << endl;
+  //cout << "\tcleared local table: size = " << local_table.size() << endl;
 }
 
 block_node::~block_node(){
@@ -595,7 +590,7 @@ void add_node::generate_code(ofstream& f) {
   right->generate_code(f);
   if (left->type.compare(right->type) != 0){
     cerr << "Error: Improper addition: Adding two expressions of different types. " 
-      left->type << " & " right->type << endl;
+         << left->type << " & " << right->type << endl;
     exit(1);
   }
   if (left->type.compare("pointer") == 0 || left->type.compare("pointer") == 0){

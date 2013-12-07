@@ -1,0 +1,69 @@
+# 1 "test.n"
+# 1 "<command-line>"
+# 1 "test.n"
+# 1 "nstdlib.h" 1
+function nstrlen ( string s );
+# 2 "test.n" 2
+
+function testfunc1(int x, int y);
+
+sfunction testfunc2(string s, pointer p);
+
+int globalOne;
+
+function testingInts2(int y) {
+  print y;
+}
+
+function testingInts(int x) {
+  print x;
+  printf("%s%d\n", "just printed the variable x: ", x);
+  x = x + 20;
+  print x;
+  x = x / 5;
+  print x;
+  x = 3;
+  x = x * x;
+  printf("%s%d\n", "3 squared = ", x);
+  x = x - 1;
+  print x;
+  testingInts2(x);
+  return x;
+}
+
+function testPtrs(pointer p1) {
+  pointer p2 = p1;
+  print (@p1);
+  print (@p2);
+  @p2 = @p2 + 1;
+  print (@p2);
+  return @p2;
+}
+
+sfunction testingStrings(string s1, string s2) {
+  string s4;
+  string tmp;
+  int x;
+  s1 = "s1 ";
+  s2 = "s2 ";
+  s4 = s1 + s2 + print "s3";
+  print s4;
+  x = 1;
+  tmp = x ? "success" : "failure"; #testing comments
+  print tmp;
+  return s4 + " s5";
+}
+
+function main() {
+  string s1 = "testing string";
+  int x;
+  print s1;
+  print testingStrings(s1, "testing literal");
+  print s1;
+  print nstrlen(s1);
+  print "";
+  x = 5;
+  print x;
+  testPtrs(&x);
+  print x;
+}

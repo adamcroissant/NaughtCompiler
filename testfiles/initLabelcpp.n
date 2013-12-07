@@ -1,0 +1,17 @@
+# 1 "initLabel.n"
+# 1 "<command-line>"
+# 1 "initLabel.n"
+# 1 "example.h" 1
+
+
+
+function fact(int x, pointer p); # 'function' -> returns an int
+sfunction initLabel(); # 'sfunction' -> returns a string
+
+int globalInt;
+# 2 "initLabel.n" 2
+
+sfunction initLabel() {
+  string result = 1 ? "Result" : "1 is false!";
+  return result;
+}

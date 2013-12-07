@@ -1,0 +1,17 @@
+# 1 "fact.n"
+# 1 "<command-line>"
+# 1 "fact.n"
+# 1 "example.h" 1
+
+
+
+function fact(int x, pointer p); # 'function' -> returns an int
+sfunction initLabel(); # 'sfunction' -> returns a string
+
+int globalInt;
+# 2 "fact.n" 2
+
+function fact(int x, pointer p) {
+  print x;
+  return @p = x ? x * fact(x-1,p) : 1;
+}
