@@ -55,8 +55,11 @@ void module_node::generate_code(ofstream& f) {
     //    cout << global_table.size() << endl;
   }
   if(funcdef_list != nullptr) {
+    funcdef_list->add_to_symbol_table(true);
     funcdef_list->generate_code(f);
   }
+
+  cout << "global symbol table has " << global_table.size() << " elements" << endl;
 }
 module_node::~module_node() {
     delete funcdecl_list;
@@ -85,6 +88,12 @@ void funcdef_list_node::generate_code(ofstream& f) {
   }
 }
 
+void funcdef_list_node::add_to_symbol_table(bool isGlobal) {
+  for (unsigned int i = 0; i < list.size(); i ++) {
+    list[i]->add_to_symbol_table(isGlobal);
+  }
+}
+
 // funcdef_node class
 funcdef_node::funcdef_node(string id, AST_node* paramlist, AST_node* block) {
   this->paramlist = paramlist;
@@ -98,8 +107,40 @@ void funcdef_node::generate_code(ofstream& f) {
     paramlist->generate_code(f);
   }
   f << ") {" << endl;
+
+  // logging for local symbol table size checking
+  cout << "function: " << id << endl;
+  
   block->generate_code(f);
   f << "}" << endl;
+}
+
+void funcdef_node::add_to_symbol_table(bool isGlobal) {
+  /* Assumes isGlobal to be true, as all functions must be global symbols
+   * in Naught (no nested functions)
+   */
+
+  map<string, pair<string, bool> >::iterator it = global_table.find(id);
+  if (it != global_table.end()) {
+    // if in table and defined
+    if (it->second.second) {
+      cerr << "error: function '" << id << "' previously defined" << endl;
+      exit(1);
+    } else {
+      // had been declared - same type?
+      if (it->second.first.compare("int") == 0) {
+        // since same type, change to defined
+        it->second.second = true;
+      } else {
+        cerr << "error: previously declared function '" << it->second.first
+             << " " << id << "' has different type than definition (int)" << endl;
+        exit(1);
+      }
+    }
+  } else {
+    // not in table at all - add to table as defined
+    global_table[id] = make_pair("int", true);
+  }
 }
 
 funcdef_node::~funcdef_node(){
@@ -244,12 +285,19 @@ block_node::block_node(AST_node* vdecl_l, AST_node* stmt_l) {
 void block_node::generate_code(ofstream& f) {
   if (vardecl_list != nullptr) {
     vardecl_list->add_to_symbol_table(false);
+
+    // logging statements for local symbol table size testing
+    cout << "\tlocal symbol table has " << local_table.size() << " elements" << endl;
+
     vardecl_list->generate_code(f);
   }
   
   if (stmt_list != nullptr) {
     stmt_list->generate_code(f);
   }
+
+  local_table.clear();
+  cout << "\tcleared local table: size = " << local_table.size() << endl;
 }
 
 block_node::~block_node(){

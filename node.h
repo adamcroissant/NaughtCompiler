@@ -72,6 +72,8 @@ class funcdef_list_node : public AST_node {
 
   virtual void generate_code(ofstream& f);
 
+  virtual void add_to_symbol_table(bool isGlobal);
+
   ~funcdef_list_node();
 };
 
@@ -84,6 +86,8 @@ class funcdef_node : public AST_node {
   funcdef_node(string id, AST_node* paramlist, AST_node* block);
 
   virtual void generate_code(ofstream& f);
+
+  virtual void add_to_symbol_table(bool isGlobal);
 
   ~funcdef_node();
 };
