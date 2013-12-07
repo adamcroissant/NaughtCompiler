@@ -381,6 +381,13 @@ void function_node::generate_code(ofstream& f) {
 
   if(argument_list) {
     argument_list->generate_code(f);
+    //check if an argument is a string and make a copy
+    for(size_t i=1; i<argument_list->list.size(); i++) {
+      if(argument_list->list[i]->type.compare("string")==0) {
+        string tmp=string_malloc(argument_list->list[i]->id, f);
+        argument_list->list[i]->id=tmp;
+      }  
+    }
     f << ntype_to_ctype(type) << " temp_" << to_string(temp_count)
       << " = " << id << "(";
 
