@@ -1,8 +1,6 @@
 #ifndef __NODE_H__
 #define __NODE_H__
 
-#include "table_element.h"
-#include "nstring.h"
 #include <string>
 #include <vector>
 #include <fstream>
