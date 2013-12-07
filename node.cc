@@ -23,6 +23,7 @@ static string string_malloc(string id, ofstream& f) {
     strcpy(temp_0, "blah");
   */
   f << "char *" << temp << " = " << "(char *)malloc(5 + strlen(" << id << "));" << endl;
+  f << "*((int*) " << temp << ")" << " = " <<"strlen("  << id << ");" <<endl;
   f << temp << " += 4;" << endl;
   f << "strcpy(" << temp << ", " << id << ");" << endl;
   return temp;
@@ -36,7 +37,7 @@ static string ntype_to_ctype(string ntype) {
 
   // will need to change this one later when we actually have
   // nstring_st allocation/generation working properly
-  if (ntype.compare("string") == 0) return "string";
+  if (ntype.compare("string") == 0) return "char*";
   
   return "";
 }
@@ -669,9 +670,12 @@ void assign_node::generate_code(ofstream &f){
   
   type = left->type;
   id = left->id;
-
-  f << left->id << " = " << right->id << ";" << endl;
-    
+  if(left->type.compare("string")==0) {
+    string r=string_malloc(right->id, f);
+    f<<left->id<< " = " << r << ";"<<endl;
+  }else {
+    f << left->id << " = " << right->id << ";" << endl;
+  }
 }
 // unary ops
 
@@ -759,6 +763,7 @@ void variable_node::generate_code(ofstream& f) {
   }
 
   type = it->second.first;
+  
   //  f << "type of variable '" << id << "' is " << type << endl;
 }
 
@@ -778,7 +783,7 @@ stringliteral_node::stringliteral_node(string str) {
 }
 
 void stringliteral_node::generate_code(ofstream& f) {
-  id = string_malloc("\"" + id + "\"", f);
+  id = string_malloc(literal, f);
 }
 
 
