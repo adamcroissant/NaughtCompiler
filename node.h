@@ -104,7 +104,8 @@ class funcdecl_list_node : public AST_node {
   vector<AST_node*> list;
     
   funcdecl_list_node(AST_node* funcdecl);
-
+  void generate_code(ofstream& f);
+  void add_to_symbol_table(bool isGlobal);
   ~funcdecl_list_node();
 };
 
@@ -113,9 +114,9 @@ class funcdecl_node : public AST_node {
  public:
   AST_node* paramlist;
   string id;
-
+  void generate_code(ofstream& f);
   funcdecl_node(string id, AST_node* paramlist);
-
+  void add_to_symbol_table(bool isGlobal);
   ~funcdecl_node();
 };
 
@@ -125,7 +126,7 @@ class sfuncdecl_node : public AST_node {
   string id;
 
   sfuncdecl_node(string id, AST_node* paramlist);
-
+  void add_to_symbol_table(bool isGlobal);
   ~sfuncdecl_node();
 };
 
