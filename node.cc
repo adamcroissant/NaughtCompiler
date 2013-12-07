@@ -35,8 +35,6 @@ static string ntype_to_ctype(string ntype) {
 
   if (ntype.compare("pointer") == 0) return "int32_t*";
 
-  // will need to change this one later when we actually have
-  // nstring_st allocation/generation working properly
   if (ntype.compare("string") == 0) return "char*";
   
   return "";
@@ -73,7 +71,6 @@ void module_node::generate_code(ofstream& f) {
     //    cout << global_table.size() << endl;
   }
   if(funcdef_list != nullptr) {
-    //funcdef_list->add_to_symbol_table(true);
     funcdef_list->generate_code(f);
   }
 
@@ -104,12 +101,6 @@ void funcdef_list_node::generate_code(ofstream& f) {
   for (uint32_t i = 0; i < list.size(); i ++) {
     list[i]->generate_code(f);
   }
-}
-
-void funcdef_list_node::add_to_symbol_table(bool isGlobal) {
-  /* for (unsigned int i = 0; i < list.size(); i ++) {
-    list[i]->add_to_symbol_table(isGlobal);
-    }*/
 }
 
 // funcdef_node class
@@ -172,8 +163,6 @@ funcdef_node::~funcdef_node(){
   delete block;
 }
 
-// *********************UPDATE THIS CLASS************************************
-
 // sfuncdef_node class
 sfuncdef_node::sfuncdef_node(string id, paramlist_node* paramlist, AST_node* block) {
    this->paramlist = paramlist;
@@ -229,8 +218,6 @@ void sfuncdef_node::add_to_symbol_table(bool isGlobal) {
     }
   }
 }
-
-//****************************************************************************
 
 // funcdecl_list_node class
 funcdecl_list_node::funcdecl_list_node(AST_node* funcdecl) {
@@ -750,7 +737,7 @@ void assign_node::generate_code(ofstream &f){
 }
 // unary ops
 
-//**********************************UPDATE THIS***********************************
+
 // print_node class
 print_node::print_node(expr_node* term) {
   this->term = term;
@@ -783,8 +770,6 @@ void print_node::generate_code(ofstream& f){
   
   f << "\\n\", " << term->id << ");" << endl;
 }
-
-//********************************************************************************
 
 // address_node
 address_node::address_node(expr_node* ptr) {
@@ -822,10 +807,7 @@ void dereference_node::generate_code(ofstream& f) {
     exit(1);
   }
 
-  string temp = "temp_" + to_string(temp_count);
-  temp_count++;  
-  f<<"int32_t " <<temp<<" = " <<"*" << ptr->id<<";"<<endl; 
-  id=temp;
+  id = "*" + ptr->id;
 }
 
 dereference_node::dereference_node(expr_node* ptr) {
@@ -858,8 +840,6 @@ void variable_node::generate_code(ofstream& f) {
   }
 
   type = it->second.first;
-  
-  //  f << "type of variable '" << id << "' is " << type << endl;
 }
 
 // intliteral_node class
