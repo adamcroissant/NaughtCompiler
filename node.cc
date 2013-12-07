@@ -35,8 +35,6 @@ static string ntype_to_ctype(string ntype) {
 
   if (ntype.compare("pointer") == 0) return "int32_t*";
 
-  // will need to change this one later when we actually have
-  // nstring_st allocation/generation working properly
   if (ntype.compare("string") == 0) return "char*";
   
   return "";
@@ -73,7 +71,6 @@ void module_node::generate_code(ofstream& f) {
     //    cout << global_table.size() << endl;
   }
   if(funcdef_list != nullptr) {
-    funcdef_list->add_to_symbol_table(true);
     funcdef_list->generate_code(f);
   }
 
@@ -106,12 +103,6 @@ void funcdef_list_node::generate_code(ofstream& f) {
   }
 }
 
-void funcdef_list_node::add_to_symbol_table(bool isGlobal) {
-  for (unsigned int i = 0; i < list.size(); i ++) {
-    list[i]->add_to_symbol_table(isGlobal);
-  }
-}
-
 // funcdef_node class
 funcdef_node::funcdef_node(string id, paramlist_node* paramlist, AST_node* block) {
   this->paramlist = paramlist;
@@ -120,6 +111,7 @@ funcdef_node::funcdef_node(string id, paramlist_node* paramlist, AST_node* block
 }   
 
 void funcdef_node::generate_code(ofstream& f) {
+  this->add_to_symbol_table(false);
   f <<"int32_t " << id << "(";
   if (paramlist != nullptr) {
     paramlist->generate_code(f);
@@ -159,7 +151,7 @@ void funcdef_node::add_to_symbol_table(bool isGlobal) {
     // not in table at all - add to table as defined
     global_table[id] = make_pair("int", true);
   }
-  if(paramlist) {
+  if(paramlist != nullptr) {
     for(size_t i=0; i< paramlist->list.size(); i++) {
       local_table[paramlist->list[i]->id]= make_pair(paramlist->list[i]->type, true);
     }
@@ -170,8 +162,6 @@ funcdef_node::~funcdef_node(){
   delete paramlist;
   delete block;
 }
-
-// *********************UPDATE THIS CLASS************************************
 
 // sfuncdef_node class
 sfuncdef_node::sfuncdef_node(string id, paramlist_node* paramlist, AST_node* block) {
@@ -185,6 +175,7 @@ sfuncdef_node::~sfuncdef_node(){
   delete block;
 }
 void sfuncdef_node::generate_code(ofstream& f) {
+  this->add_to_symbol_table(false);
   f <<"char* " << id << "(";
   if (paramlist != nullptr) {
     paramlist->generate_code(f);
@@ -221,9 +212,12 @@ void sfuncdef_node::add_to_symbol_table(bool isGlobal) {
     // not in table at all - add to table as defined
     global_table[id] = make_pair("string", true);
   }
+  if(paramlist != nullptr) {
+    for(size_t i=0; i< paramlist->list.size(); i++) {
+      local_table[paramlist->list[i]->id]= make_pair(paramlist->list[i]->type, true);
+    }
+  }
 }
-
-//****************************************************************************
 
 // funcdecl_list_node class
 funcdecl_list_node::funcdecl_list_node(AST_node* funcdecl) {
@@ -429,15 +423,15 @@ void block_node::generate_code(ofstream& f) {
   if (vardecl_list != nullptr) {
     vardecl_list->add_to_symbol_table(false);
 
-    // logging statements for local symbol table size testing
-    cout << "\tlocal symbol table has " << local_table.size() << " elements" << endl;
-
     vardecl_list->generate_code(f);
   }
   
   if (stmt_list != nullptr) {
     stmt_list->generate_code(f);
   }
+
+  // logging statements for local symbol table size testing
+  cout << "\tlocal symbol table has " << local_table.size() << " elements" << endl;
 
   local_table.clear();
   cout << "\tcleared local table: size = " << local_table.size() << endl;
@@ -502,6 +496,7 @@ vardecl_node::vardecl_node(string type, string id, bool e) {
     isExtern = e;
     this->type = type;
     this->id = id;
+    this->assign = nullptr;
 }
 
 void vardecl_node::generate_code(ofstream& f) {
@@ -568,8 +563,17 @@ ternary_node::~ternary_node() {
 
 void ternary_node::generate_code(ofstream& f) {
   question->generate_code(f);
+
+  id = "temp_" + to_string(temp_count);
+  temp_count ++;
+  f << ntype_to_ctype(left->type) << " " << id << ";" << endl;
+  f << "if (" << question->id << ") {" << endl;
   left->generate_code(f);
+  f << id << " = " << left->id << ";" << endl;
+  f << "} else {" << endl;
   right->generate_code(f);
+  f << id << " = " << right->id << ";" << endl;
+  f << "}" << endl;
 
   if (left->type.compare(right->type) == 0) {
     type = left->type;
@@ -578,16 +582,6 @@ void ternary_node::generate_code(ofstream& f) {
          << left->type << " & " << right->type << endl;
     exit(1);
   }
-
-  id = "temp_" + to_string(temp_count);
-  f << ntype_to_ctype(type) << " " << id << ";" << endl;
-  f << "if (" << question->id << ") {" << endl;
-  f << id << " = " << left->id << ";" << endl;
-  f << "} else {" << endl;
-  f << id << " = " << right->id << ";" << endl;
-  f << "}" << endl;
-
-  temp_count ++;
 }
 
 // binary
@@ -742,7 +736,7 @@ void assign_node::generate_code(ofstream &f){
 }
 // unary ops
 
-//**********************************UPDATE THIS***********************************
+
 // print_node class
 print_node::print_node(expr_node* term) {
   this->term = term;
@@ -775,8 +769,6 @@ void print_node::generate_code(ofstream& f){
   
   f << "\\n\", " << term->id << ");" << endl;
 }
-
-//********************************************************************************
 
 // address_node
 address_node::address_node(expr_node* ptr) {
@@ -814,10 +806,7 @@ void dereference_node::generate_code(ofstream& f) {
     exit(1);
   }
 
-  string temp = "temp_" + to_string(temp_count);
-  temp_count++;  
-  f<<"int32_t " <<temp<<" = " <<"*" << ptr->id<<";"<<endl; 
-  id=temp;
+  id = "*" + ptr->id;
 }
 
 dereference_node::dereference_node(expr_node* ptr) {
@@ -850,8 +839,6 @@ void variable_node::generate_code(ofstream& f) {
   }
 
   type = it->second.first;
-  
-  //  f << "type of variable '" << id << "' is " << type << endl;
 }
 
 // intliteral_node class
