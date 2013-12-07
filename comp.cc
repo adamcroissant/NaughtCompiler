@@ -80,7 +80,10 @@ int main(int argc, char **argv)
 
   // insert include statements
   file << "#include <stdint.h>" << endl;
-
+  file << "#include <string.h>" << endl;
+  file << "#include <stdlib.h>" << endl;
+  file << "#include <stdio.h>"  << endl;
+  file << "#include \"string_add.h\"" << endl;
   // generate code
   AST->generate_code(file);
   file.close();
