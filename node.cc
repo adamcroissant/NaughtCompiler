@@ -13,6 +13,23 @@ static int temp_count;
 static map<string, pair<string, bool>> global_table;
 static map<string, pair<string, bool>> local_table;
 
+// malloc space for int, null terminator, and space for the string
+static string string_malloc(string id, ofstream& f) {
+  string temp = "temp_" + to_string(temp_count);
+  temp_count++;
+  /*
+    char *temp_0 = (char *)malloc(5 + strlen("blah"));
+    temp_0 += 4;
+    strcpy(temp_0, "blah");
+  */
+  f << "char *" << temp << " = " << "(char *)malloc(5 + strlen(" << id << "));" << endl;
+  f << "*((int*) " << temp << ")" << " = " <<"strlen("  << id << ");" <<endl;
+  f << temp << " += 4;" << endl;
+  f << "strcpy(" << temp << ", " << id << ");" << endl;
+  return temp;
+}
+
+
 static string ntype_to_ctype(string ntype) {
   if (ntype.compare("int") == 0) return "int32_t";
 
@@ -20,7 +37,7 @@ static string ntype_to_ctype(string ntype) {
 
   // will need to change this one later when we actually have
   // nstring_st allocation/generation working properly
-  if (ntype.compare("string") == 0) return "string";
+  if (ntype.compare("string") == 0) return "char*";
   
   return "";
 }
@@ -649,9 +666,12 @@ void assign_node::generate_code(ofstream &f){
   
   type = left->type;
   id = left->id;
-
-  f << left->id << " = " << right->id << ";" << endl;
-    
+  if(left->type.compare("string")==0) {
+    string r=string_malloc(right->id, f);
+    f<<left->id<< " = " << r << ";"<<endl;
+  }else {
+    f << left->id << " = " << right->id << ";" << endl;
+  }
 }
 // unary ops
 // print_node class
@@ -732,6 +752,7 @@ void variable_node::generate_code(ofstream& f) {
   }
 
   type = it->second.first;
+  
   //  f << "type of variable '" << id << "' is " << type << endl;
 }
 
@@ -747,11 +768,14 @@ void IntLiteral_node::generate_code(ofstream& f) {
 // stringliteral_node class
 stringliteral_node::stringliteral_node(string str) {
   type = "string";
-  literal.len = str.length();
-  for (size_t i = 0; i < str.length(); i ++) {
-    literal.str[i] = str[i];
-  }
+  literal = str;
 }
+
+void stringliteral_node::generate_code(ofstream& f) {
+  id = string_malloc(literal, f);
+}
+
+
 // -- END TERMS --
 
 #endif /* NODE_H */
