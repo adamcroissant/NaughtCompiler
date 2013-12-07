@@ -166,6 +166,8 @@ funcdef_node::~funcdef_node(){
   delete block;
 }
 
+// *********************UPDATE THIS CLASS************************************
+
 // sfuncdef_node class
 sfuncdef_node::sfuncdef_node(string id, AST_node* paramlist, AST_node* block) {
    this->paramlist = paramlist;
@@ -177,6 +179,8 @@ sfuncdef_node::~sfuncdef_node(){
   delete paramlist;
   delete block;
 }
+
+//****************************************************************************
 
 // funcdecl_list_node class
 funcdecl_list_node::funcdecl_list_node(AST_node* funcdecl) {
@@ -683,6 +687,8 @@ void assign_node::generate_code(ofstream &f){
   }
 }
 // unary ops
+
+//**********************************UPDATE THIS***********************************
 // print_node class
 print_node::print_node(expr_node* term) {
   this->term = term;
@@ -692,6 +698,9 @@ print_node::~print_node() {
   delete term;
 }
 
+//********************************************************************************
+
+// address_node
 address_node::address_node(expr_node* ptr) {
   this->ptr=ptr;
   type="pointer";
@@ -716,6 +725,8 @@ void address_node::generate_code(ofstream& f) {
 
 }
 
+
+// dereference_node
 void dereference_node::generate_code(ofstream& f) {
   ptr->generate_code(f);
 
