@@ -322,7 +322,7 @@ void vardecl_node::generate_code(ofstream& f) {
 }
   
 void vardecl_node::add_to_symbol_table(bool isGlobal){
-  if (isGlobal){
+  if (isGlobal || isExtern) { // if var was declared in global scope OR with "extern" keyword
     if(global_table.find(id) == global_table.end())
       global_table[id] = *(new pair<string, bool>(type, false));
     else {
