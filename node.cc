@@ -46,6 +46,7 @@ module_node::module_node(vardecl_list_node* vardecl_list, funcdef_list_node* fun
 }
 void module_node::generate_code(ofstream& f) {
   if(funcdecl_list != nullptr) {
+    funcdecl_list->add_to_symbol_table(true);
     funcdecl_list->generate_code(f);
   }
   
@@ -165,6 +166,17 @@ funcdecl_list_node::funcdecl_list_node(AST_node* funcdecl) {
   list.push_back(funcdecl);
 }
 
+void funcdecl_list_node::generate_code(ofstream& f) {
+  for (unsigned int i = 0; i < list.size(); i ++) {
+    list[i]->generate_code(f);
+  }
+}
+
+void funcdecl_list_node::add_to_symbol_table(bool isGlobal) {
+  for(size_t i=0; i<list.size(); i++) {
+    list[i]->add_to_symbol_table(isGlobal);
+  }
+}
 funcdecl_list_node::~funcdecl_list_node() {
   for(size_t i=0; i<list.size(); i++) {
     delete list[i];
@@ -179,9 +191,32 @@ funcdecl_node::funcdecl_node(string id, AST_node* paramlist) {
   this->id=id;
 }
 
+void funcdecl_node::add_to_symbol_table(bool isGlobal) {
+  if (isGlobal) { 
+    if(global_table.find(id) == global_table.end()) {
+      global_table[id] = make_pair("int", false);
+    } else {
+      cerr << "Error: declaring global function" << id << " twice in the file" << endl;
+      exit(1);
+    }
+  }else {
+    //for us
+    cerr << "ERROR: cannot declare local function"<<endl;
+  }
+}
+
+void funcdecl_node::generate_code(ofstream& f) {
+  f<<"int32_t "<< id<< "(";
+  if (paramlist != nullptr) {
+    paramlist->generate_code(f);
+  }
+  f<<");"<<endl;
+}
+
 funcdecl_node::~funcdecl_node(){
   delete paramlist;
 }
+
 
 // sfuncdecl_node class
 sfuncdecl_node::sfuncdecl_node(string id, AST_node* paramlist) {
@@ -189,6 +224,19 @@ sfuncdecl_node::sfuncdecl_node(string id, AST_node* paramlist) {
   this->id = id;
 }
 
+void sfuncdecl_node::add_to_symbol_table(bool isGlobal) {
+  if (isGlobal) {
+    if(global_table.find(id) == global_table.end()) {
+      global_table[id] = make_pair("string", false);
+    } else {
+      cerr << "Error: declaring global function" << id << " twice in the file" << endl;
+      exit(1);
+    }
+  }else {
+    //for us
+    cerr << "ERROR: cannot declare local function"<<endl;
+  }    
+}
 
 sfuncdecl_node::~sfuncdecl_node(){
   delete paramlist;
@@ -222,7 +270,7 @@ param_node::param_node(string type, string id) {
 }
 
 void param_node::generate_code(ofstream& f) {
-  f << type << " " << id;
+  f << ntype_to_ctype(type)<< " " << id;
 }
 
 
