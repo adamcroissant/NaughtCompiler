@@ -563,8 +563,17 @@ ternary_node::~ternary_node() {
 
 void ternary_node::generate_code(ofstream& f) {
   question->generate_code(f);
+
+  id = "temp_" + to_string(temp_count);
+  temp_count ++;
+  f << ntype_to_ctype(left->type) << " " << id << ";" << endl;
+  f << "if (" << question->id << ") {" << endl;
   left->generate_code(f);
+  f << id << " = " << left->id << ";" << endl;
+  f << "} else {" << endl;
   right->generate_code(f);
+  f << id << " = " << right->id << ";" << endl;
+  f << "}" << endl;
 
   if (left->type.compare(right->type) == 0) {
     type = left->type;
@@ -573,16 +582,6 @@ void ternary_node::generate_code(ofstream& f) {
          << left->type << " & " << right->type << endl;
     exit(1);
   }
-
-  id = "temp_" + to_string(temp_count);
-  f << ntype_to_ctype(type) << " " << id << ";" << endl;
-  f << "if (" << question->id << ") {" << endl;
-  f << id << " = " << left->id << ";" << endl;
-  f << "} else {" << endl;
-  f << id << " = " << right->id << ";" << endl;
-  f << "}" << endl;
-
-  temp_count ++;
 }
 
 // binary
