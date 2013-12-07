@@ -180,6 +180,34 @@ sfuncdef_node::~sfuncdef_node(){
   delete block;
 }
 
+void sfuncdef_node::add_to_symbol_table(bool isGlobal) {
+  /* Assumes isGlobal to be true, as all functions must be global symbols
+   * in Naught (no nested functions)
+   */
+
+  map<string, pair<string, bool> >::iterator it = global_table.find(id);
+  if (it != global_table.end()) {
+    // if in table and defined
+    if (it->second.second) {
+      cerr << "error: function '" << id << "' previously defined" << endl;
+      exit(1);
+    } else {
+      // had been declared - same type?
+      if (it->second.first.compare("string") == 0) {
+        // since same type, change to defined
+        it->second.second = true;
+      } else {
+        cerr << "error: previously declared function '" << it->second.first
+             << " " << id << "' has different type than definition (string)" << endl;
+        exit(1);
+      }
+    }
+  } else {
+    // not in table at all - add to table as defined
+    global_table[id] = make_pair("string", true);
+  }
+}
+
 //****************************************************************************
 
 // funcdecl_list_node class
