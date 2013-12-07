@@ -179,6 +179,16 @@ sfuncdef_node::~sfuncdef_node(){
   delete paramlist;
   delete block;
 }
+void sfuncdef_node::generate_code(ofstream& f) {
+  f <<"char* " << id << "(";
+  if (paramlist != nullptr) {
+    paramlist->generate_code(f);
+  }
+  f << ") {" << endl;
+  block->generate_code(f);
+  f << "}" << endl;
+}
+  
 
 void sfuncdef_node::add_to_symbol_table(bool isGlobal) {
   /* Assumes isGlobal to be true, as all functions must be global symbols
