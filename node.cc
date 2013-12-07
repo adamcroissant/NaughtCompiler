@@ -329,16 +329,20 @@ void function_node::generate_code(ofstream& f) {
   else
     type = it->second.first;
 
-  f << ntype_to_ctype(type) << " temp_" << to_string(temp_count)
-    << " = " << id << "(";
   if(argument_list) {
     argument_list->generate_code(f);
+    f << ntype_to_ctype(type) << " temp_" << to_string(temp_count)
+      << " = " << id << "(";
+
     f<<argument_list->list[0]->id;
     for(size_t i=1; i<argument_list->list.size(); i++) {  
       f<<", "<<argument_list->list[i]->id;
     }
-  }  
-  f<<");"<<endl;
+  } else {  
+    f << ntype_to_ctype(type) << "temp_" << to_string(temp_count)
+      << " = " << id << "(";
+  }
+  f << ");" << endl;
 
   id = "temp_" + to_string(temp_count);
   temp_count++;
