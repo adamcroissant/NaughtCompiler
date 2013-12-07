@@ -289,8 +289,15 @@ function_node::~function_node(){
 }
 
 void function_node::generate_code(ofstream& f) {
+
+  // look up function in symbol table
+  auto it = global_table.find(id);
+  if (it == global_table.end())
+    type = "undefined";
+  else
+    type = it->first;
+
   if(argument_list) {
-    
     argument_list->generate_code(f);
     f<<id<<"(";
     f<<argument_list->list[0]->id;
@@ -554,7 +561,8 @@ void mult_node::generate_code(ofstream& f) {
     cerr<<"Warning: multiplication of an unidentified expression"<<endl;
   }
   if (left->type.compare(right->type) != 0){
-    cerr << "Improper multiplications: multiplying two expressions of different types" << endl;
+    cerr << "Improper multiplications: multiplying two expressions of different types: "
+	 << left->type << " and " << right->type << endl;
     exit(1);
   }
 

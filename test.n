@@ -1,8 +1,14 @@
-  int x;
   int y;
   pointer p;
+  
+function foo() {
+  int x = 7;
+  return x;
+}
+
 function test() {
+  int x;
   p = &x;
-  x + 2 * y;
+  x + 2 * foo();
   return 0;
 }
