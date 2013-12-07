@@ -372,7 +372,7 @@ void vardecl_node::generate_code(ofstream& f) {
 void vardecl_node::add_to_symbol_table(bool isGlobal){
   if (isGlobal || isExtern) { // if var was declared in global scope OR with "extern" keyword
     if(global_table.find(id) == global_table.end())
-      global_table[id] = *(new pair<string, bool>(type, false));
+      global_table[id] = make_pair(type, false);
     else {
       cerr << "Error: declaring global variable " << id << " twice in the file" << endl;
       exit(1);
@@ -380,7 +380,7 @@ void vardecl_node::add_to_symbol_table(bool isGlobal){
   }
   else {
     if(local_table.find(id) == local_table.end())
-      local_table[id] = *(new pair<string, bool>(type, false));
+      local_table[id] = make_pair(type, false);
     else {
       cerr << "Error: declaring local variable " << id << " twice in the file" << endl;
       exit(1);
