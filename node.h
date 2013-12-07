@@ -95,7 +95,7 @@ class sfuncdef_node : public AST_node {
   AST_node* paramlist;
   AST_node* block;
   string id;
-
+  void generate_code(ofstream& f);
   sfuncdef_node(string id, AST_node* paramlist, AST_node* block);
 
   ~sfuncdef_node();
