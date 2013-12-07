@@ -130,6 +130,7 @@ class sfuncdecl_node : public AST_node {
   string id;
 
   sfuncdecl_node(string id, AST_node* paramlist);
+  void generate_code(ofstream& f);
   void add_to_symbol_table(bool isGlobal);
   ~sfuncdecl_node();
 };

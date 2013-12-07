@@ -224,6 +224,14 @@ sfuncdecl_node::sfuncdecl_node(string id, AST_node* paramlist) {
   this->id = id;
 }
 
+void sfuncdecl_node::generate_code(ofstream& f) {
+  f<<"char* "<< id<< "(";
+  if (paramlist != nullptr) {
+    paramlist->generate_code(f);
+  }
+  f<<");"<<endl;
+}
+
 void sfuncdecl_node::add_to_symbol_table(bool isGlobal) {
   if (isGlobal) {
     if(global_table.find(id) == global_table.end()) {
