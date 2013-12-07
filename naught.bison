@@ -124,43 +124,27 @@ extern AST_node *AST;
 module :
          funcdecl_list vardecl_list funcdef_list
           { AST = new module_node($2, $3, $1);
-//            $$ = AST;
-//            cout << *$$ << " -> module " << endl;
           }
         |              vardecl_list funcdef_list
           { AST = new module_node($1, $2, nullptr);
-//            $$ = AST;
-//            cout << *$$ << " -> module " << endl;
           }
         | funcdecl_list             funcdef_list
           { AST = new module_node(nullptr, $2, $1);
-//            $$ = AST;
-//            cout << *$$ << " -> module " << endl;
           }
         |                            funcdef_list
           { AST = new module_node(nullptr, $1, nullptr);
-//            $$ = AST;
-//            cout << *$$ << " -> module " << endl;
           }
         | funcdecl_list vardecl_list
           { AST = new module_node($2, nullptr, $1);
-//            $$ = AST;
-//            cout << *$$ << " -> module " << endl;
           }
         |              vardecl_list
           { AST = new module_node($1, nullptr, nullptr);
-//            $$ = AST;
-//            cout << *$$ << " -> module " << endl;
           }
         | funcdecl_list             
           { AST = new module_node(nullptr, nullptr, $1);
-//            $$ = AST;
-//            cout << *$$ << " -> module " << endl;
           }
         |
           { AST = new module_node(nullptr, nullptr, nullptr);
-//            $$ = AST;
-//            cout << *$$ << " -> module " << endl;
           }
         ;
 
@@ -168,28 +152,48 @@ funcdecl_list :
           funcdecl_list funcdecl SEMI
           { $1->list.push_back($2);
 	    $$ = $1;
-//          cout << *$$ << " -> funcdecl_list " << endl;
+
+            delete $3;
           }
         | funcdecl SEMI
           { $$ = new funcdecl_list_node($1);
-//            cout << *$$ << " -> funcdecl_list " << endl;
+
+            delete $2;
           }
        ;
  
 funcdecl :
           FUNCTION ID LPAREN param_list RPAREN
           { $$ = new funcdecl_node($2->getString(), $4);
+
+            delete $1;
+            delete $2;
+            delete $3;
+            delete $5;
           }
         | FUNCTION ID LPAREN  RPAREN
           { $$ = new funcdecl_node($2->getString(), nullptr);
+
+            delete $1;
+            delete $2;
+            delete $3;
+            delete $4;
           }
         | SFUNCTION ID LPAREN param_list RPAREN
           { $$ = new sfuncdecl_node($2->getString(), $4);  
-            //cout << *$$ << " -> funcdecl " << endl;
+
+            delete $1;
+            delete $2;
+            delete $3;
+            delete $5;
           }
         | SFUNCTION ID LPAREN  RPAREN
           { $$ = new sfuncdecl_node($2->getString(), nullptr); 
-            //cout << *$$ << " -> funcdecl " << endl;
+
+            delete $1;
+            delete $2;
+            delete $3;
+            delete $4;
           }
 	;
 
@@ -198,43 +202,38 @@ vardecl_list :
           vardecl_list vardecl SEMI
           { $1->list.push_back($2);
             $$ = $1;
-            /*
-            $$ = new StrUtil(*$1 + *$2 +*$3);
-            cout << *$$ << " -> vardecl_list " << endl;
-            */
+            
+            delete $3;
           }
         | vardecl SEMI
           { $$ = new vardecl_list_node($1);
-            /*
-            $$ = new StrUtil(*$1 + *$2);
-            cout << *$$ << " -> vardecl_list " << endl;
-            */
+            
+            delete $2;
           }
         ;
 
 vardecl : 
          TYPE ID
           { $$ = new vardecl_node($1->getString(), $2->getString());
-            /*
-            $$ = new StrUtil(*$1 + *$2);
-            cout << *$$ << " -> vardecl " << endl;
-            */
+            
+            delete $1;
+            delete $2;
           }
        | TYPE ID ASSIGN expr
           { $$ = new vardecl_node($1->getString(), $2->getString(),
                new assign_node(new variable_node($2->getString()), $4));
-            /*
-            $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
-            cout << *$$ << " -> vardecl " << endl;
-            */
+            
+            delete $1;  
+            delete $2;  
+            delete $3;
           }
        | EXTERN TYPE ID  /* extern variable */
           {
             $$ = new vardecl_node($2->getString(), $3->getString(), true);
-            /*
-            $$ = new StrUtil(*$1 + *$2);
-            cout << *$$ << " -> vardecl " << endl;
-            */
+            
+            delete $1;  
+            delete $2;
+            delete $3;
           }
        ;
 
@@ -252,31 +251,35 @@ funcdef_list :
 funcdef :
 	  FUNCTION ID LPAREN param_list RPAREN block
           { $$ = new funcdef_node($2->getString(), $4, $6);
-            /*
-            $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5 + *$6);
-            cout << *$$ << " -> funcdef " << endl;
-            */
+            
+            delete $1;
+            delete $2;
+            delete $3;
+            delete $5;
           }
         | FUNCTION ID LPAREN RPAREN block
           { $$ = new funcdef_node($2->getString(), nullptr, $5);
-            /*
-            $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
-            cout << *$$ << " -> funcdef " << endl;
-            */
+            
+            delete $1;
+            delete $2;
+            delete $3;
+            delete $4;
           }
 	| SFUNCTION ID LPAREN param_list RPAREN block
           { $$ = new sfuncdef_node($2->getString(), $4, $6);
-            /*
-            $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5 + *$6);
-            cout << *$$ << " -> funcdef " << endl;
-            */
+            
+            delete $1;
+            delete $2;
+            delete $3;
+            delete $5;
           }
         | SFUNCTION ID LPAREN RPAREN block
           { $$ = new sfuncdef_node($2->getString(), nullptr, $5);
-            /*
-            $$ = new StrUtil(*$1 + *$2 + *$3 + *$4 + *$5);
-            cout << *$$ << " -> funcdef " << endl;
-            */
+            
+            delete $1;
+            delete $2;
+            delete $3;
+            delete $4;
           }
         ;
 
@@ -284,42 +287,47 @@ param_list :
           param_list COMMA param
           { $1->list.push_back($3);
             $$ = $1;
-            /*
-            $$ = new StrUtil(*$1 + *$2 + *$3);
-            cout << *$$ << " -> param_list " << endl;
-            */
+            
+            delete $2;
           }
         | param
           { $$ = new paramlist_node($1);
-            /*
-            $$ = new StrUtil(*$1);
-            cout << *$$ << " -> param_list " << endl;
-            */
           }
         ;
 
 param :
          TYPE ID
           { $$ = new param_node($1->getString(), $2->getString());
-            /*
-            $$ = new StrUtil(*$1 + *$2);
-            cout << *$$ << " -> param " << endl;
-            */
+            
+            delete $1;
+            delete $2;
           }
         ;
 
 block : 
 	  LCBRACE vardecl_list stmt_list RCBRACE
           { $$ = new block_node($2, $3);
+            
+            delete $1;
+            delete $4;
           }
 	| LCBRACE              stmt_list RCBRACE
           { $$ = new block_node(nullptr, $2);
+            
+            delete $1;
+            delete $3;
           }
 	| LCBRACE vardecl_list           RCBRACE
           { $$ = new block_node($2, nullptr);
+
+            delete $1;
+            delete $3;
           }
         | LCBRACE RCBRACE
           { $$ = new block_node(nullptr, nullptr);
+
+            delete $1;
+            delete $2;
           }
         ;
 
@@ -336,31 +344,48 @@ stmt_list :
 stmt : 
          expr SEMI
           { $$ = $1;
+
+            delete $2;
           }
        | RETURN expr SEMI
           { $$ = new return_node($2);
+          
+            delete $1;
+            delete $3;
           }
      ;
 
 expr : 
         expr ADD expr
         { $$ = new add_node($1, $3);
+        
+          delete $2;
         }
       | expr SUB expr
         { $$ = new sub_node($1, $3);
+        
+          delete $2;
         }
       | expr STAR expr
         { $$ = new mult_node($1, $3);
+        
+          delete $2;
         }
       | expr DIV expr
         { $$ = new div_node($1, $3);
+        
+          delete $2;
         }
       | term  ASSIGN expr
         { $$ = new assign_node($1, $3);
+
+          delete $2;
         }
       | expr QUESTION expr COLON expr
-      // check this constructor's node order
         { $$ = new ternary_node($1, $3, $5);
+        
+          delete $2;
+          delete $4;
         }
       | term
         { $$ = $1;
@@ -370,65 +395,61 @@ expr :
 term :
         STRING_LITERAL
         { $$ = new stringliteral_node($1->getString());
+        
+          delete $1; 
         }
       | INT_LITERAL
         { $$ = new IntLiteral_node(atoi(($1->getString()).c_str()));
+          
+          delete $1;
         }
       | ID
         { $$ = new variable_node($1->getString());
-          /*
-          $$ = new StrUtil(*$1);
-          cout << *$$ << " -> term" << endl;
-          */
+          
+          delete $1;
         }
       | LPAREN expr RPAREN
        { $$ = $2;
-         /*
-         $$ = new StrUtil( *$1 + *$2 + *$3 );
-         cout << *$$ << " -> term" << endl;
-         */
+
+         delete $1;
+         delete $3;
         }
       | UNARY_OP term
         { if($1->getString().compare("print")==0) {
           $$ = new print_node($2);
-          //cout << *$$ << " -> term" << endl;
           }else if($1->getString().compare("@")==0) {
             $$= new dereference_node($2);
           }else {
             $$= new address_node($2);
           }
+
+          delete $1;
         }
       | ID LPAREN arglist RPAREN  /* function call */
        { $$ = new function_node($1->getString(), $3);
-         /*
-         $$ = new StrUtil(*$1 + *$2 + *$3 + *$4);
-         cout << *$$ << " -> term" << endl;
-         */
+         
+         delete $1;
+         delete $2;
+         delete $4;
        }
       | ID LPAREN RPAREN  /* function call - no params */
        { $$ = new function_node($1->getString(), nullptr);
-         /*
-         $$ = new StrUtil(*$1 + *$2 + *$3);
-         cout << *$$ << " -> term" << endl;
-         */
+         
+         delete $1;
+         delete $2;
+         delete $3;         
        }
       ;
 
 arglist :
         expr
         { $$ = new arglist_node($1);
-          /*
-          $$ = new StrUtil(*$1);
-          cout << *$$ << " -> arglist" << endl;
-          */
         }
       | arglist COMMA expr
         { $1->list.push_back($3);
           $$ = $1;
-          /*
-          $$ = new StrUtil( *$1 + *$2 + *$3 );
-          cout << *$$ << " -> arglist" << endl;
-          */
+
+          delete $2;
         }
       ;
 
