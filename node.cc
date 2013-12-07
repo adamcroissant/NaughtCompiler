@@ -113,7 +113,7 @@ void funcdef_list_node::add_to_symbol_table(bool isGlobal) {
 }
 
 // funcdef_node class
-funcdef_node::funcdef_node(string id, AST_node* paramlist, AST_node* block) {
+funcdef_node::funcdef_node(string id, paramlist_node* paramlist, AST_node* block) {
   this->paramlist = paramlist;
   this->block = block;
   this->id=id;
@@ -159,6 +159,11 @@ void funcdef_node::add_to_symbol_table(bool isGlobal) {
     // not in table at all - add to table as defined
     global_table[id] = make_pair("int", true);
   }
+  if(paramlist) {
+    for(size_t i=0; i< paramlist->list.size(); i++) {
+      local_table[paramlist->list[i]->id]= make_pair(paramlist->list[i]->type, true);
+    }
+  }
 }
 
 funcdef_node::~funcdef_node(){
@@ -169,7 +174,7 @@ funcdef_node::~funcdef_node(){
 // *********************UPDATE THIS CLASS************************************
 
 // sfuncdef_node class
-sfuncdef_node::sfuncdef_node(string id, AST_node* paramlist, AST_node* block) {
+sfuncdef_node::sfuncdef_node(string id, paramlist_node* paramlist, AST_node* block) {
    this->paramlist = paramlist;
    this->block = block;
    this->id = id;
@@ -284,7 +289,7 @@ sfuncdecl_node::~sfuncdecl_node(){
 // parameters
 
 // paramlist_node class
-paramlist_node::paramlist_node(AST_node* param) {
+paramlist_node::paramlist_node(param_node* param) {
   list.push_back(param);
 }
 
@@ -349,7 +354,7 @@ void function_node::generate_code(ofstream& f) {
       f<<", "<<argument_list->list[i]->id;
     }
   } else {  
-    f << ntype_to_ctype(type) << "temp_" << to_string(temp_count)
+    f << ntype_to_ctype(type) << " temp_" << to_string(temp_count)
       << " = " << id << "(";
   }
   f << ");" << endl;

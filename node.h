@@ -77,11 +77,11 @@ class funcdef_list_node : public AST_node {
 
 class funcdef_node : public AST_node {
   public:
-  AST_node* paramlist;
+  paramlist_node* paramlist;
   AST_node* block;
   string id;
 
-  funcdef_node(string id, AST_node* paramlist, AST_node* block);
+  funcdef_node(string id, paramlist_node* paramlist, AST_node* block);
 
   virtual void generate_code(ofstream& f);
 
@@ -92,11 +92,11 @@ class funcdef_node : public AST_node {
 
 class sfuncdef_node : public AST_node {
  public:
-  AST_node* paramlist;
+  paramlist_node* paramlist;
   AST_node* block;
   string id;
   void generate_code(ofstream& f);
-  sfuncdef_node(string id, AST_node* paramlist, AST_node* block);
+  sfuncdef_node(string id, paramlist_node* paramlist, AST_node* block);
 
   ~sfuncdef_node();
 };
@@ -136,9 +136,9 @@ class sfuncdecl_node : public AST_node {
 // parameters
 class paramlist_node : public AST_node {
  public:
-  vector<AST_node*> list;
+  vector<param_node*> list;
 
-  paramlist_node(AST_node* param);
+  paramlist_node(param_node* param);
 
   ~paramlist_node();
 
