@@ -557,7 +557,16 @@ void add_node::generate_code(ofstream& f) {
   id = "temp_" + to_string(temp_count);
   temp_count ++;
 
-  f << ntype_to_ctype(left->type) << " " << id << " = " << left->id << " + " << right->id << ";" << endl;
+  f << ntype_to_ctype(left->type) << " " << id << " = ";
+
+  if (left->type.compare("string") == 0) {
+    f << "string_add(" << left->id << ", " << right->id << ");";
+  } else {
+    f << left->id << " + " << right->id << ";";
+  }
+  f << endl;
+
+  type = left->type;
 }
 
 add_node::~add_node() {
