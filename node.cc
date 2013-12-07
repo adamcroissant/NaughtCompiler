@@ -20,7 +20,7 @@ static string ntype_to_ctype(string ntype) {
 
   // will need to change this one later when we actually have
   // nstring_st allocation/generation working properly
-  if (ntype.compare("string") == 0) return "string";
+  if (ntype.compare("string") == 0) return "char*";
   
   return "";
 }
