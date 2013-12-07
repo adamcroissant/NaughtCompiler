@@ -292,22 +292,27 @@ void function_node::generate_code(ofstream& f) {
 
   // look up function in symbol table
   auto it = global_table.find(id);
-  if (it == global_table.end())
-    type = "undefined";
+  if (it == global_table.end()){
+    cerr << "Warning: undefined function " << id << 
+      ". Return type assumed to be an int." << endl;
+    type = "int";
+  }
   else
-    type = it->first;
+    type = it->second.first;
 
+  f << ntype_to_ctype(type) << " temp_" << to_string(temp_count)
+    << " = " << id << "(";
   if(argument_list) {
     argument_list->generate_code(f);
-    f<<id<<"(";
     f<<argument_list->list[0]->id;
     for(size_t i=1; i<argument_list->list.size(); i++) {  
       f<<", "<<argument_list->list[i]->id;
     }
-  }else {
-    f<<id<<"("; 
-  }
-  f<<")"<<endl;
+  }  
+  f<<");"<<endl;
+
+  id = "temp_" + to_string(temp_count);
+  temp_count++;
 }
 
 // arglist_node class
