@@ -73,7 +73,7 @@ void module_node::generate_code(ofstream& f) {
     //    cout << global_table.size() << endl;
   }
   if(funcdef_list != nullptr) {
-    funcdef_list->add_to_symbol_table(true);
+    //funcdef_list->add_to_symbol_table(true);
     funcdef_list->generate_code(f);
   }
 
@@ -107,9 +107,9 @@ void funcdef_list_node::generate_code(ofstream& f) {
 }
 
 void funcdef_list_node::add_to_symbol_table(bool isGlobal) {
-  for (unsigned int i = 0; i < list.size(); i ++) {
+  /* for (unsigned int i = 0; i < list.size(); i ++) {
     list[i]->add_to_symbol_table(isGlobal);
-  }
+    }*/
 }
 
 // funcdef_node class
@@ -120,6 +120,7 @@ funcdef_node::funcdef_node(string id, paramlist_node* paramlist, AST_node* block
 }   
 
 void funcdef_node::generate_code(ofstream& f) {
+  this->add_to_symbol_table(false);
   f <<"int32_t " << id << "(";
   if (paramlist != nullptr) {
     paramlist->generate_code(f);
@@ -159,7 +160,7 @@ void funcdef_node::add_to_symbol_table(bool isGlobal) {
     // not in table at all - add to table as defined
     global_table[id] = make_pair("int", true);
   }
-  if(paramlist) {
+  if(paramlist != nullptr) {
     for(size_t i=0; i< paramlist->list.size(); i++) {
       local_table[paramlist->list[i]->id]= make_pair(paramlist->list[i]->type, true);
     }
@@ -185,6 +186,7 @@ sfuncdef_node::~sfuncdef_node(){
   delete block;
 }
 void sfuncdef_node::generate_code(ofstream& f) {
+  this->add_to_symbol_table(false);
   f <<"char* " << id << "(";
   if (paramlist != nullptr) {
     paramlist->generate_code(f);
@@ -220,6 +222,11 @@ void sfuncdef_node::add_to_symbol_table(bool isGlobal) {
   } else {
     // not in table at all - add to table as defined
     global_table[id] = make_pair("string", true);
+  }
+  if(paramlist != nullptr) {
+    for(size_t i=0; i< paramlist->list.size(); i++) {
+      local_table[paramlist->list[i]->id]= make_pair(paramlist->list[i]->type, true);
+    }
   }
 }
 
@@ -422,15 +429,15 @@ void block_node::generate_code(ofstream& f) {
   if (vardecl_list != nullptr) {
     vardecl_list->add_to_symbol_table(false);
 
-    // logging statements for local symbol table size testing
-    cout << "\tlocal symbol table has " << local_table.size() << " elements" << endl;
-
     vardecl_list->generate_code(f);
   }
   
   if (stmt_list != nullptr) {
     stmt_list->generate_code(f);
   }
+
+  // logging statements for local symbol table size testing
+  cout << "\tlocal symbol table has " << local_table.size() << " elements" << endl;
 
   local_table.clear();
   cout << "\tcleared local table: size = " << local_table.size() << endl;
@@ -495,6 +502,7 @@ vardecl_node::vardecl_node(string type, string id, bool e) {
     isExtern = e;
     this->type = type;
     this->id = id;
+    this->assign = nullptr;
 }
 
 void vardecl_node::generate_code(ofstream& f) {
