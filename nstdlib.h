@@ -1,0 +1,1 @@
+function nstrlen ( string s );
