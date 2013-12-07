@@ -689,6 +689,30 @@ print_node::~print_node() {
   delete term;
 }
 
+void print_node::generate_code(ofstream& f){
+  term->generate_code(f);
+  type = term->type;
+  id = term->id;
+  f << "printf (\"%";
+  
+  // check type for printf
+  if (type.compare("string") == 0)
+    f << "s";
+  else if (type.compare("int") == 0)
+    f << "d";
+  else if (type.compare("pointer") == 0){
+    cerr << "Error: cannot print pointer types" << endl;
+    exit(1);
+  }
+  // sanity check
+  else{
+    cerr << "How did you even get this type through the lexer!!!";
+    exit(1);
+  }
+  
+  f << "\\n\", " << term->id << ");" << endl;
+}
+
 //********************************************************************************
 
 // address_node

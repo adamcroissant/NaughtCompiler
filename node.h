@@ -322,6 +322,7 @@ class print_node : public expr_node {
     expr_node* term;
     print_node(expr_node* term);
     ~print_node();
+    virtual void generate_code(ofstream& f);
 };
 
 class address_node : public expr_node {
