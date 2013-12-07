@@ -179,6 +179,16 @@ sfuncdef_node::~sfuncdef_node(){
   delete paramlist;
   delete block;
 }
+void sfuncdef_node::generate_code(ofstream& f) {
+  f <<"char* " << id << "(";
+  if (paramlist != nullptr) {
+    paramlist->generate_code(f);
+  }
+  f << ") {" << endl;
+  block->generate_code(f);
+  f << "}" << endl;
+}
+  
 
 //****************************************************************************
 
