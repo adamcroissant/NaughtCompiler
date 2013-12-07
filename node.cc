@@ -93,7 +93,7 @@ funcdef_node::funcdef_node(string id, AST_node* paramlist, AST_node* block) {
 }   
 
 void funcdef_node::generate_code(ofstream& f) {
-  f <<"int " << id << "(";
+  f <<"int32_t " << id << "(";
   if (paramlist != nullptr) {
     paramlist->generate_code(f);
   }
@@ -389,7 +389,7 @@ void ternary_node::generate_code(ofstream& f) {
   }
 
   id = "temp_" + to_string(temp_count);
-  f << type << " " << id << ";" << endl;
+  f << ntype_to_ctype(type) << " " << id << ";" << endl;
   f << "if (" << question->id << ") {" << endl;
   f << id << " = " << left->id << ";" << endl;
   f << "} else {" << endl;
@@ -433,7 +433,7 @@ void add_node::generate_code(ofstream& f) {
   id = "temp_" + to_string(temp_count);
   temp_count ++;
 
-  f << left->type << " " << id << " = " << left->id << " + " << right->id << ";" << endl;
+  f << ntype_to_ctype(left->type) << " " << id << " = " << left->id << " + " << right->id << ";" << endl;
 }
 
 add_node::~add_node() {
@@ -470,7 +470,7 @@ void mult_node::generate_code(ofstream& f) {
 
   id = "temp_" + to_string(temp_count);
   temp_count ++;
-  f << "int " << id << " = " << left->id << " * " << right->id << ";" << endl;
+  f << "int32_t " << id << " = " << left->id << " * " << right->id << ";" << endl;
   //return temp;
 }
 
@@ -507,7 +507,7 @@ void sub_node::generate_code(ofstream& f) {
 
   id = "temp_" + to_string(temp_count);
   temp_count ++;
-  f << "int  " << id << " = " << left->id << " - " << right->id << ";" << endl;
+  f << "int32_t " << id << " = " << left->id << " - " << right->id << ";" << endl;
 }
 
 sub_node::~sub_node() {
@@ -543,7 +543,7 @@ void div_node::generate_code(ofstream& f) {
 
   id = "temp_" + to_string(temp_count);
   temp_count ++;
-  f << "int " << id << " = " << left->id << " / " << right->id << ";" << endl;
+  f << "int32_t " << id << " = " << left->id << " / " << right->id << ";" << endl;
   //return temp;
 }
 
@@ -608,7 +608,7 @@ void address_node::generate_code(ofstream& f) {
 
   string temp = "temp_" + to_string(temp_count);
   temp_count++;
-  f<<"int* " <<temp<<" = " <<"&" << ptr->id<<";"<<endl;
+  f<<"int32_t* " <<temp<<" = " <<"&" << ptr->id<<";"<<endl;
   id=temp;
 
 }
@@ -624,7 +624,7 @@ void dereference_node::generate_code(ofstream& f) {
 
   string temp = "temp_" + to_string(temp_count);
   temp_count++;  
-  f<<"int " <<temp<<" = " <<"*" << ptr->id<<";"<<endl; 
+  f<<"int32_t " <<temp<<" = " <<"*" << ptr->id<<";"<<endl; 
   id=temp;
 }
 

@@ -74,9 +74,14 @@ int main(int argc, char **argv)
   if ( yyparse() ) return EXIT_FAILURE;
 
   if ( AST == nullptr ) return EXIT_SUCCESS;  // empty file?
-  
-  // Generate code
+
+  // open file
   ofstream file(outFilename);
+
+  // insert include statements
+  file << "#include <stdint.h>" << endl;
+
+  // generate code
   AST->generate_code(file);
   file.close();
 
