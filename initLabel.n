@@ -1,0 +1,6 @@
+#include "example.h"
+
+sfunction initLabel() {
+  string result = 1 ? "Result" : "1 is false!";
+  return result;
+}
