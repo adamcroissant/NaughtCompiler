@@ -339,16 +339,20 @@ void function_node::generate_code(ofstream& f) {
   else
     type = it->second.first;
 
-  f << ntype_to_ctype(type) << " temp_" << to_string(temp_count)
-    << " = " << id << "(";
   if(argument_list) {
     argument_list->generate_code(f);
+    f << ntype_to_ctype(type) << " temp_" << to_string(temp_count)
+      << " = " << id << "(";
+
     f<<argument_list->list[0]->id;
     for(size_t i=1; i<argument_list->list.size(); i++) {  
       f<<", "<<argument_list->list[i]->id;
     }
-  }  
-  f<<");"<<endl;
+  } else {  
+    f << ntype_to_ctype(type) << "temp_" << to_string(temp_count)
+      << " = " << id << "(";
+  }
+  f << ");" << endl;
 
   id = "temp_" + to_string(temp_count);
   temp_count++;
@@ -706,6 +710,30 @@ print_node::print_node(expr_node* term) {
 
 print_node::~print_node() {
   delete term;
+}
+
+void print_node::generate_code(ofstream& f){
+  term->generate_code(f);
+  type = term->type;
+  id = term->id;
+  f << "printf (\"%";
+  
+  // check type for printf
+  if (type.compare("string") == 0)
+    f << "s";
+  else if (type.compare("int") == 0)
+    f << "d";
+  else if (type.compare("pointer") == 0){
+    cerr << "Error: cannot print pointer types" << endl;
+    exit(1);
+  }
+  // sanity check
+  else{
+    cerr << "How did you even get this type through the lexer!!!";
+    exit(1);
+  }
+  
+  f << "\\n\", " << term->id << ");" << endl;
 }
 
 //********************************************************************************

@@ -1,8 +1,6 @@
 #ifndef __NODE_H__
 #define __NODE_H__
 
-#include "table_element.h"
-#include "nstring.h"
 #include <string>
 #include <vector>
 #include <fstream>
@@ -322,6 +320,7 @@ class print_node : public expr_node {
     expr_node* term;
     print_node(expr_node* term);
     ~print_node();
+    virtual void generate_code(ofstream& f);
 };
 
 class address_node : public expr_node {
