@@ -134,7 +134,7 @@ void funcdef_node::add_to_symbol_table(bool isGlobal) {
   if (it != global_table.end()) {
     // if in table and defined
     if (it->second.second) {
-      cerr << "error: function '" << id << "' previously defined" << endl;
+      cerr << "Error: function '" << id << "' previously defined" << endl;
       exit(1);
     } else {
       // had been declared - same type?
@@ -142,7 +142,7 @@ void funcdef_node::add_to_symbol_table(bool isGlobal) {
         // since same type, change to defined
         it->second.second = true;
       } else {
-        cerr << "error: previously declared function '" << it->second.first
+        cerr << "Error: previously declared function '" << it->second.first
              << " " << id << "' has different type than definition (int)" << endl;
         exit(1);
       }
@@ -195,7 +195,7 @@ void sfuncdef_node::add_to_symbol_table(bool isGlobal) {
   if (it != global_table.end()) {
     // if in table and defined
     if (it->second.second) {
-      cerr << "error: function '" << id << "' previously defined" << endl;
+      cerr << "Error: function '" << id << "' previously defined" << endl;
       exit(1);
     } else {
       // had been declared - same type?
@@ -203,7 +203,7 @@ void sfuncdef_node::add_to_symbol_table(bool isGlobal) {
         // since same type, change to defined
         it->second.second = true;
       } else {
-        cerr << "error: previously declared function '" << it->second.first
+        cerr << "Error: previously declared function '" << it->second.first
              << " " << id << "' has different type than definition (string)" << endl;
         exit(1);
       }
@@ -259,7 +259,7 @@ void funcdecl_node::add_to_symbol_table(bool isGlobal) {
     }
   }else {
     //for us
-    cerr << "ERROR: cannot declare local function"<<endl;
+    cerr << "Error: cannot declare local function"<<endl;
   }
 }
 
@@ -300,7 +300,7 @@ void sfuncdecl_node::add_to_symbol_table(bool isGlobal) {
     }
   }else {
     //for us
-    cerr << "ERROR: cannot declare local function"<<endl;
+    cerr << "Error: cannot declare local function"<<endl;
   }    
 }
 
@@ -569,7 +569,7 @@ void ternary_node::generate_code(ofstream& f) {
   if (left->type.compare(right->type) == 0) {
     type = left->type;
   } else {
-    cerr << "left and right sides of ternary are not of same type: "
+    cerr << "Error: left and right sides of ternary are not of same type. "
          << left->type << " & " << right->type << endl;
     exit(1);
   }
@@ -595,7 +595,8 @@ void add_node::generate_code(ofstream& f) {
   left->generate_code(f);
   right->generate_code(f);
   if (left->type.compare(right->type) != 0){
-    cerr << "Error: Improper addition: Adding two expressions of different types" << endl;
+    cerr << "Error: Improper addition: Adding two expressions of different types. " 
+      left->type << " & " right->type << endl;
     exit(1);
   }
   if (left->type.compare("pointer") == 0 || left->type.compare("pointer") == 0){
@@ -721,7 +722,7 @@ void assign_node::generate_code(ofstream &f){
   right->generate_code(f);
 
   if (left->type.compare(right->type) != 0){
-    cerr << "Improper Assign: assigning a " << right->type 
+    cerr << "Error: Improper Assign: assigning a " << right->type 
 	 << " to a " << left->type << endl;
     exit(1);
   }
@@ -785,7 +786,7 @@ void address_node::generate_code(ofstream& f) {
   ptr->generate_code(f);
   
   if (ptr->type.compare("int") != 0) {
-    cerr << "error: can only use address-of operator on ints - attempted on '"
+    cerr << "Error: can only use address-of operator on ints - attempted on '"
          << ptr->type << " " << ptr->id << "'" << endl;
   }
 
@@ -802,7 +803,7 @@ void dereference_node::generate_code(ofstream& f) {
   ptr->generate_code(f);
 
   if (ptr->type.compare("pointer") != 0) {
-    cerr << "error: can only dereference pointers - attempted to dereference '"
+    cerr << "Error: can only dereference pointers - attempted to dereference '"
          << ptr->type << " " << ptr->id << "'" << endl;
     exit(1);
   }
@@ -834,7 +835,7 @@ void variable_node::generate_code(ofstream& f) {
   if (it == local_table.end()) {
     it = global_table.find(id);
     if (it == global_table.end()) {
-      cerr << "error: variable '" << id << "' undeclared" << endl;
+      cerr << "Error: variable '" << id << "' undeclared" << endl;
       exit(1);
     }
   }
