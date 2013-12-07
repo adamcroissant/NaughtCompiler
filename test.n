@@ -9,6 +9,6 @@ function foo() {
 function test() {
   int x;
   p = &x;
-  x + 2 * foo();
+  x + 2 * foo(2, 3);
   return 0;
 }

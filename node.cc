@@ -13,6 +13,22 @@ static int temp_count;
 static map<string, pair<string, bool>> global_table;
 static map<string, pair<string, bool>> local_table;
 
+// malloc space for int, null terminator, and space for the string
+static string string_malloc(string id, ofstream& f) {
+  string temp = "temp_" + to_string(temp_count);
+  temp_count++;
+  /*
+    char *temp_0 = (char *)malloc(5 + strlen("blah"));
+    temp_0 += 4;
+    strcpy(temp_0, "blah");
+  */
+  f << "char *" << temp << " = " << "(char *)malloc(5 + strlen(" << id << "));" << endl;
+  f << temp << " += 4;" << endl;
+  f << "strcpy(" << temp << ", " << id << ");" << endl;
+  return temp;
+}
+
+
 static string ntype_to_ctype(string ntype) {
   if (ntype.compare("int") == 0) return "int32_t";
 
@@ -300,22 +316,27 @@ void function_node::generate_code(ofstream& f) {
 
   // look up function in symbol table
   auto it = global_table.find(id);
-  if (it == global_table.end())
-    type = "undefined";
+  if (it == global_table.end()){
+    cerr << "Warning: undefined function " << id << 
+      ". Return type assumed to be an int." << endl;
+    type = "int";
+  }
   else
-    type = it->first;
+    type = it->second.first;
 
+  f << ntype_to_ctype(type) << " temp_" << to_string(temp_count)
+    << " = " << id << "(";
   if(argument_list) {
     argument_list->generate_code(f);
-    f<<id<<"(";
     f<<argument_list->list[0]->id;
     for(size_t i=1; i<argument_list->list.size(); i++) {  
       f<<", "<<argument_list->list[i]->id;
     }
-  }else {
-    f<<id<<"("; 
-  }
-  f<<")"<<endl;
+  }  
+  f<<");"<<endl;
+
+  id = "temp_" + to_string(temp_count);
+  temp_count++;
 }
 
 // arglist_node class
@@ -519,25 +540,12 @@ add_node::add_node(expr_node* left, expr_node* right) {
 void add_node::generate_code(ofstream& f) {
   left->generate_code(f);
   right->generate_code(f);
-  if(left->type.compare("unidentified") ==0 && right->type.compare("unidentified")==0) {
-    cerr << "Error: unkown type for both expressions given to add" <<endl;
-    exit(1);
-  }
-  if(left->type.compare("unidentified")==0) {
-    type=right->type;
-    cerr<<"Warning: addition of an unidentified expression"<<endl; 
-  }else if(left->type.compare("unidentified")==0) {
-    type=right->type;
-    cerr<<"Warning: addition of an unidentified expression"<<endl;
-  }else if (left->type.compare(right->type) != 0){
+  if (left->type.compare(right->type) != 0){
     cerr << "Error: Improper addition: Adding two expressions of different types" << endl;
     exit(1);
-  }else {
-    type = left->type;
   }
-  
   if (left->type.compare("pointer") == 0 || left->type.compare("pointer") == 0){
-    cerr << "Error: Improper expressions: trying to add to a pointer" << endl;
+    cerr << "Error: Improper expressions: addition undefined on type 'pointer'" << endl;
     exit(1);
   } 
 
@@ -563,19 +571,9 @@ mult_node::mult_node(expr_node* left, expr_node* right) {
 void mult_node::generate_code(ofstream& f) {
   left->generate_code(f); 
   right->generate_code(f); 
-  if(left->type.compare("unidentified") ==0 && right->type.compare("unidentified")==0) {
-    left->type="int";
-    right->type="int"; 
-    cerr<<"Warning: multiplication of an unidentified expression"<<endl;
-  }
-  if (left->type.compare(right->type) != 0){
-    cerr << "Improper multiplications: multiplying two expressions of different types: "
-	 << left->type << " and " << right->type << endl;
-    exit(1);
-  }
-
+  
   if (left->type.compare("int") != 0 || right->type.compare("int") != 0){
-    cerr << "Improper expressions: trying to multiply to a non-integer" << endl;
+    cerr << "Error: Improper expressions: trying to multiply to a non-integer" << endl;
     exit(1);
   }
 
@@ -601,19 +599,9 @@ sub_node::sub_node(expr_node* left, expr_node* right) {
 void sub_node::generate_code(ofstream& f) {
   left->generate_code(f);
   right->generate_code(f);
-  if(left->type.compare("unidentified") ==0 && right->type.compare("unidentified")==0) {
-    left->type="int";
-    right->type="int";
-    cerr<<"Warning: subtraction of an unidentified expression"<<endl;
-  }
-
-  if (left->type.compare(right->type) != 0){
-    cerr << "Improper subtraction: subtracting two expressions of different types" << endl;
-    exit(1);
-  }
 
   if (left->type.compare("int") != 0 || right->type.compare("int") != 0){
-    cerr << "Improper expressions: trying to subtract with a non-integer" << endl;
+    cerr << "Error: Improper expressions: trying to subtract with a non-integer" << endl;
     exit(1);
   }
 
@@ -637,19 +625,9 @@ div_node::div_node(expr_node* left, expr_node* right) {
 void div_node::generate_code(ofstream& f) {
   left->generate_code(f);
   right->generate_code(f);
-  if(left->type.compare("unidentified") ==0 && right->type.compare("unidentified")==0) {
-    left->type="int";
-    right->type="int";
-    cerr<<"Warning: multiplication of an unidentified expression"<<endl;
-  }
-
-  if (left->type.compare(right->type) != 0){
-    cerr << "Improper division: dividing two expressions of different types" << endl;
-    exit(1);
-  }
-
+  
   if (left->type.compare("int") != 0 || right->type.compare("int") != 0){
-    cerr << "Improper expressions: trying to divide with a non-integer" << endl;
+    cerr << "Error: Improper expressions: trying to divide with a non-integer" << endl;
     exit(1);
   }
 
@@ -785,11 +763,14 @@ void IntLiteral_node::generate_code(ofstream& f) {
 // stringliteral_node class
 stringliteral_node::stringliteral_node(string str) {
   type = "string";
-  literal.len = str.length();
-  for (size_t i = 0; i < str.length(); i ++) {
-    literal.str[i] = str[i];
-  }
+  literal = str;
 }
+
+void stringliteral_node::generate_code(ofstream& f) {
+  id = string_malloc("\"" + id + "\"", f);
+}
+
+
 // -- END TERMS --
 
 #endif /* NODE_H */

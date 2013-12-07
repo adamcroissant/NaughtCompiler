@@ -358,8 +358,9 @@ class IntLiteral_node : public expr_node {
 
 class stringliteral_node : public expr_node {
  public:
-  nstring_st literal;
+  string literal;
   stringliteral_node(string str);
+  virtual void generate_code(ofstream& f);
 };
 // -- END TERMS --
 
